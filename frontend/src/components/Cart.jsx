@@ -7,6 +7,7 @@ const Cart = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [includePrices, setIncludePrices] = useState(true);
+  const [quantityInputs, setQuantityInputs] = useState({});
 
   if (cartItems.length === 0) {
     return (
@@ -57,28 +58,30 @@ const Cart = () => {
     try {
       setIsSharing(true);
       const { blob, summaryText } = await buildCartPdf(cartItems, { includePrices });
-      const file = new File([blob], `Balaji-Traders-${new Date().getTime()}.pdf`, { type: 'application/pdf' });
-
-      // Try native share API on mobile (supports file attachments)
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: 'Balaji Traders Cart Summary',
-          text: summaryText,
-        });
-        return;
+      
+      // Create text message for WhatsApp
+      let message = `*Balaji Traders - Cart Summary*\n\n`;
+      cartItems.forEach((item) => {
+        message += `${item.name}\nQuantity: ${item.quantity}\n`;
+        if (includePrices) {
+          message += `Price: ₹${item.price} × ${item.quantity} = ₹${item.price * item.quantity}\n`;
+        }
+        message += `\n`;
+      });
+      if (includePrices) {
+        message += `*Total: ₹${getCartTotal()}*`;
       }
 
-      // Desktop/web fallback: WhatsApp Web cannot be auto-sent with files.
-      // We only download the PDF and instruct the user to attach manually.
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = file.name;
-      link.click();
-      URL.revokeObjectURL(url);
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
 
-      alert('PDF downloaded. WhatsApp Web cannot auto-attach files. Please attach the downloaded PDF manually in WhatsApp.');
+      // Mobile: Use native WhatsApp if available
+      if (navigator.share && /mobile/i.test(navigator.userAgent)) {
+        window.open(`whatsapp://send?text=${encodedMessage}`, '_blank');
+      } else {
+        // Desktop: Open WhatsApp Web
+        window.open(whatsappUrl, '_blank');
+      }
     } catch (err) {
       console.error('WhatsApp share failed', err);
       alert('Share failed. Please try again.');
@@ -87,16 +90,24 @@ const Cart = () => {
     }
   };
 
+  const handleQuantityChange = (itemId, value) => {
+    const qty = parseInt(value) || 0;
+    setQuantityInputs({ ...quantityInputs, [itemId]: value });
+    if (qty > 0) {
+      updateQuantity(itemId, qty);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-8">Your Cart</h2>
 
-        <div className="bg-white rounded-xl shadow-md p-6">
+        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="flex items-center gap-4 border-b border-gray-200 py-4 last:border-b-0"
+              className="flex flex-col sm:flex-row items-start sm:items-center gap-4 border-b border-gray-200 py-4 last:border-b-0"
             >
               <img
                 src={item.image}
@@ -104,12 +115,13 @@ const Cart = () => {
                 className="w-20 h-20 object-cover rounded-lg"
               />
 
-              <div className="flex-1">
+              <div className="flex-1 w-full sm:w-auto">
                 <h3 className="font-semibold text-lg">{item.name}</h3>
                 <p className="text-green-600 font-semibold">₹{item.price}</p>
               </div>
 
-              <div className="flex items-center gap-3">
+              {/* Quantity Controls - Desktop */}
+              <div className="hidden sm:flex items-center gap-3">
                 <button
                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
                   className="w-8 h-8 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center"
@@ -125,7 +137,35 @@ const Cart = () => {
                 </button>
               </div>
 
-              <div className="w-24 text-right font-semibold">
+              {/* Quantity Controls - Mobile */}
+              <div className="sm:hidden w-full flex items-center gap-2">
+                <span className="text-gray-600 text-sm">Qty:</span>
+                <button
+                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                  className="w-8 h-8 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center text-sm"
+                >
+                  -
+                </button>
+                <input
+                  type="number"
+                  min="1"
+                  value={quantityInputs[item.id] !== undefined ? quantityInputs[item.id] : item.quantity}
+                  onChange={(e) => handleQuantityChange(item.id, e.target.value)}
+                  className="w-12 text-center border border-gray-300 rounded px-2 py-1 text-sm"
+                />
+                <button
+                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                  className="w-8 h-8 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center text-sm"
+                >
+                  +
+                </button>
+              </div>
+
+              <div className="hidden sm:block w-24 text-right font-semibold">
+                ₹{item.price * item.quantity}
+              </div>
+
+              <div className="sm:hidden w-full text-right font-semibold text-green-600">
                 ₹{item.price * item.quantity}
               </div>
 
@@ -192,7 +232,6 @@ const Cart = () => {
               >
                 Clear Cart
               </button>
-
             </div>
           </div>
         </div>

@@ -4,5 +4,8 @@ html, body, #root {
 
 .app {
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-y: hidden;
+}
+footer {
+  margin-top: auto;
 }
