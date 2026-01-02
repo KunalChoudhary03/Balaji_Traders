@@ -5,6 +5,9 @@ import img1 from "../assets/Chadh/bend.webp";
 import img2 from "../assets/Chadh/buj.webp";
 import img3 from "../assets/Chadh/debbi.webp";
 import img4 from "../assets/Chadh/debbi1.webp";
+import img5 from "../assets/Chadh/fanbox.webp";
+import img6 from "../assets/Chadh/pipe.webp";
+import img7 from "../assets/Chadh/tape.webp";
 
 const products = [
   {
@@ -31,6 +34,24 @@ const products = [
     price: 700,
     image: img4,
   },
+  {
+    id: 5,
+    name: "Chadh Fan Box",
+    price: 300,
+    image: img5,
+  },
+  {
+    id: 6,
+    name: "Chadh Pipe",
+    price: 400,
+    image: img6,
+  },
+  {
+    id: 7,
+    name: "Chadh Tape",
+    price: 150,
+    image: img7,
+  }
 ];
 
 const Chadh = () => {
@@ -76,7 +97,7 @@ const Chadh = () => {
                   alt={item.name}
                   className="w-full h-56 object-cover transition duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                <div className="absolute inset-0 " />
                 <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/90 text-sm font-semibold text-gray-800 shadow">
                   ₹{item.price}
                 </span>

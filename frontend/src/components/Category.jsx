@@ -6,25 +6,22 @@ const categories = [
     name: "Chadh",
     path: "/chadh",
     desc: "Pipes & fittings",
-    icon: "🧱",
   },
   {
     name: "CPVC",
     path: "/cpvc",
     desc: "Hot & cold water pipes",
-    icon: "🔥",
+
   },
   {
     name: "Power",
     path: "/power",
     desc: "Electrical solutions",
-    icon: "⚡",
   },
   {
     name: "SWR",
     path: "/swr",
     desc: "Drainage systems",
-    icon: "🚿",
   },
 ];
 
@@ -58,9 +55,6 @@ const Category = () => {
                        hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.02]
                        transition-all duration-300 group"
           >
-            <div className="text-4xl text-center mb-4">
-              {cat.icon}
-            </div>
 
             <h3 className="text-lg font-semibold text-center">
               {cat.name}
