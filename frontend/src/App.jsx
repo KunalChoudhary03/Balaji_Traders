@@ -1,4 +1,4 @@
-
+import Footer from './components/Footer'
 import Navbar from './components/Navbar'
 import Router from './components/Router'
 
@@ -7,6 +7,7 @@ const App = () => {
     <div>
       <Navbar />
       <Router />
+      <Footer />
     </div>
   )
 }
