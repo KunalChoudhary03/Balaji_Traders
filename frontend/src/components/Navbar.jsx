@@ -9,21 +9,21 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-md">
-      <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4 flex justify-between items-center">
+      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div 
           onClick={() => navigate('/')}
-          className="text-lg sm:text-xl md:text-2xl font-bold text-blue-600 cursor-pointer hover:text-blue-700 transition"
+          className="text-2xl font-bold text-blue-600 cursor-pointer hover:text-blue-700 transition"
         >
           Balaji Traders
         </div>
         
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-4">
           <button 
             onClick={() => navigate('/cart')}
-            className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition"
+            className="relative p-2 hover:bg-gray-100 rounded-lg transition"
           >
             <svg
-              className="w-6 h-6 sm:w-7 sm:h-7 text-gray-700"
+              className="w-7 h-7 text-gray-700"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -42,7 +42,7 @@ const Navbar = () => {
             )}
           </button>
           
-          <button className="px-3 py-1.5 sm:px-6 sm:py-2 text-sm sm:text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
+          <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300">
             Login
           </button>
         </div>
