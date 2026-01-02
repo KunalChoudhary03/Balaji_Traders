@@ -32,8 +32,10 @@ const products = [
 
 const Cpvc = () => {
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { addToCart, updateQuantity, cartItems } = useCart();
   const [searchTerm, setSearchTerm] = useState(""); // 🔹 search term state
+
+  const getCartItem = (id) => cartItems.find(item => item.id === id);
 
   const handleAddToCart = (product) => {
     addToCart(product);
@@ -86,11 +88,11 @@ const Cpvc = () => {
                 key={item.id}
                 className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 overflow-hidden border border-gray-100"
               >
-                <div className="relative overflow-hidden">
+                <div className="relative overflow-hidden bg-white">
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-full h-56 object-cover transition duration-500 group-hover:scale-105"
+                    className="w-full h-48 object-contain transition duration-500 group-hover:scale-105"
                   />
                   <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/90 text-sm font-semibold text-gray-800 shadow">
                     ₹{item.price}
@@ -99,20 +101,43 @@ const Cpvc = () => {
 
                 <div className="p-4 flex flex-col gap-3">
                   <h3 className="text-lg font-semibold text-gray-900 truncate">{item.name}</h3>
-                  <button
-                    onClick={() => handleAddToCart(item)}
-                    className="w-full inline-flex justify-center items-center gap-2 py-2.5 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 active:scale-[0.99] transition"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+
+                  {getCartItem(item.id) ? (
+                    <div className="w-full flex items-center justify-between bg-gray-100 rounded-xl px-3 py-2">
+                      <button
+                        onClick={() => {
+                          const currentItem = getCartItem(item.id);
+                          if (currentItem && currentItem.quantity > 0) {
+                            updateQuantity(item.id, currentItem.quantity - 1);
+                          }
+                        }}
+                        className="w-9 h-9 bg-white rounded-full shadow text-lg font-bold hover:bg-gray-200"
+                      >
+                        −
+                      </button>
+
+                      <span className="font-semibold text-lg">
+                        {getCartItem(item.id).quantity}
+                      </span>
+
+                      <button
+                        onClick={() => {
+                          const currentItem = getCartItem(item.id);
+                          updateQuantity(item.id, currentItem.quantity + 1);
+                        }}
+                        className="w-9 h-9 bg-white rounded-full shadow text-lg font-bold hover:bg-gray-200"
+                      >
+                        +
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleAddToCart(item)}
+                      className="w-full inline-flex justify-center items-center gap-2 py-2.5 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 active:scale-[0.99] transition"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2m0 0L7 15h10l1.6-8H5.4zm3 12a1 1 0 100 2 1 1 0 000-2zm8 0a1 1 0 100 2 1 1 0 000-2z" />
-                    </svg>
-                    Add to Cart
-                  </button>
+                      Add to Cart
+                    </button>
+                  )}
                 </div>
               </div>
             ))
