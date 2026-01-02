@@ -8,6 +8,7 @@ import img4 from "../assets/Swr/Jali.webp";
 import img5 from "../assets/Swr/Multi Floor Trap_.webp";
 import img6 from "../assets/Swr/Soket_.webp";
 import img7 from "../assets/Swr/Tee.webp";
+import { toast } from "react-toastify";
 
 const products = [
   {
@@ -60,6 +61,7 @@ const Swr = () => {
 
   const handleAddToCart = (product) => {
     addToCart(product);
+  toast.success(`${product.name} added to cart 🛒`);
   };
 
   return (

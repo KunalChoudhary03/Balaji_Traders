@@ -8,6 +8,7 @@ import img4 from "../assets/Chadh/debbi1.webp";
 import img5 from "../assets/Chadh/fanbox.webp";
 import img6 from "../assets/Chadh/pipe.webp";
 import img7 from "../assets/Chadh/tape.webp";
+import { toast } from "react-toastify";
 
 const products = [
   { id: 1, name: "Chadh Bend", price: 450, image: img1 },
@@ -30,6 +31,7 @@ const Chadh = () => {
 
   const handleAddToCart = (product) => {
     addToCart(product);
+  toast.success(`${product.name} added to cart 🛒`);
   };
 
   return (

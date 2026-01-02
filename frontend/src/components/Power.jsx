@@ -10,6 +10,7 @@ import img6 from "../assets/Power/gun blet.webp";
 import img7 from "../assets/Power/normal.webp";
 import img8 from "../assets/Power/petrol tank.webp";
 import img9 from "../assets/Power/Shankar.webp";
+import { toast } from "react-toastify";
 
 const products = [
   {
@@ -74,6 +75,7 @@ const Power = () => {
 
   const handleAddToCart = (product) => {
     addToCart(product);
+  toast.success(`${product.name} added to cart 🛒`);
   };
 
   return (

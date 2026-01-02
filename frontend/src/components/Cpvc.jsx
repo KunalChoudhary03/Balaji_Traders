@@ -13,6 +13,7 @@ import img9 from "../assets/Cpvc/MTB.webp";
 import img10 from "../assets/Cpvc/Mtp.webp";
 import img11 from "../assets/Cpvc/Reduser_.webp";
 import img12 from "../assets/Cpvc/Union.webp";
+import { toast } from "react-toastify";
 
 const products = [
   {
@@ -95,6 +96,7 @@ const Cpvc = () => {
 
   const handleAddToCart = (product) => {
     addToCart(product);
+  toast.success(`${product.name} added to cart 🛒`);
   };
 
   return (
