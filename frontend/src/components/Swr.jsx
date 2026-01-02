@@ -97,7 +97,7 @@ const Swr = () => {
                   alt={item.name}
                   className="w-full h-56 object-cover transition duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 " />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                 <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-white/90 text-sm font-semibold text-gray-800 shadow">
                   ₹{item.price}
                 </span>

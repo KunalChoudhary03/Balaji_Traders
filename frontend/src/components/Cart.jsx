@@ -96,12 +96,12 @@ const Cart = () => {
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col md:flex-row md:items-center gap-4 border-b border-gray-200 py-4 last:border-b-0"
+              className="flex items-center gap-4 border-b border-gray-200 py-4 last:border-b-0"
             >
               <img
                 src={item.image}
                 alt={item.name}
-                className="w-full md:w-20 h-48 md:h-20 object-cover rounded-lg"
+                className="w-20 h-20 object-cover rounded-lg"
               />
 
               <div className="flex-1">
@@ -109,49 +109,44 @@ const Cart = () => {
                 <p className="text-green-600 font-semibold">₹{item.price}</p>
               </div>
 
-              <div className="flex flex-row md:flex-row items-center justify-between md:justify-start gap-4 md:gap-0">
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="w-8 h-8 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center"
-                  >
-                    -
-                  </button>
-                  <span className="w-8 text-center font-semibold">{item.quantity}</span>
-                  <button
-                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="w-8 h-8 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center"
-                  >
-                    +
-                  </button>
-                </div>
-
-                <div className="hidden md:block md:w-24 md:text-right font-semibold md:mx-4">
-                  ₹{item.price * item.quantity}
-                </div>
-                <div className="md:hidden font-semibold">
-                  ₹{item.price * item.quantity}
-                </div>
-
+              <div className="flex items-center gap-3">
                 <button
-                  onClick={() => removeFromCart(item.id)}
-                  className="text-red-500 hover:text-red-700 transition"
+                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                  className="w-8 h-8 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center"
                 >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                    />
-                  </svg>
+                  -
+                </button>
+                <span className="w-8 text-center font-semibold">{item.quantity}</span>
+                <button
+                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                  className="w-8 h-8 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center"
+                >
+                  +
                 </button>
               </div>
+
+              <div className="w-24 text-right font-semibold">
+                ₹{item.price * item.quantity}
+              </div>
+
+              <button
+                onClick={() => removeFromCart(item.id)}
+                className="text-red-500 hover:text-red-700 transition"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </button>
             </div>
           ))}
 
