@@ -79,6 +79,7 @@ const products = [
 const Chadh = () => {
   const { addToCart, updateQuantity, cartItems } = useCart();
   const [selectedVariants, setSelectedVariants] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -103,18 +104,34 @@ const Chadh = () => {
     toast.success(`${product.name} added 🛒`);
   };
 
+  const filteredProducts = products.filter((p) =>
+    p.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen px-4 py-8">
       <Categories />
-      {/* Header */}
-      <div className="max-w-6xl mx-auto mb-8">
-        <h1 className="text-4xl font-bold text-center text-blue-900 mb-2">Chadh Products</h1>
-        <p className="text-center text-gray-700 text-lg">Best prices for you</p>
-      </div>
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="mb-6 text-center">
+          <h1 className="text-4xl font-bold text-blue-900 mb-2">Chadh Products</h1>
+          <p className="text-gray-700 text-lg">Best prices for you</p>
+        </div>
 
-      {/* Products Grid */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {products.map((product) => {
+        {/* Search */}
+        <div className="flex justify-center mb-8">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full md:w-1/2 px-4 py-3 rounded-xl border border-blue-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
+        </div>
+
+        {/* Products Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredProducts.map((product) => {
           const variant = getVariant(product);
           const cartId = `${product.id}-${variant.size}`;
           const cartItem = getCartItem(cartId);
@@ -211,6 +228,7 @@ const Chadh = () => {
           );
         })}
       </div>
+    </div>
     </div>
   );
 };

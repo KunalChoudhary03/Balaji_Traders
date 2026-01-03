@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { toast } from "react-toastify";
 import img1 from "../assets/Cpvc/Ball.webp";
@@ -82,9 +81,9 @@ const products = [
 ];
 
 const Cpvc = () => {
-  const navigate = useNavigate();
   const { addToCart, updateQuantity, cartItems } = useCart();
   const [selectedVariants, setSelectedVariants] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -109,20 +108,32 @@ const Cpvc = () => {
     toast.success(`${product.name} (${variant.size}) added 🛒`);
   };
 
+  const filteredProducts = products.filter((p) =>
+    p.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-         
-         
     <div className="min-h-screen px-4 py-8">
-         <Categories />
+      <Categories />
       <div className="max-w-6xl mx-auto">
 
-        <div className="flex items-center gap-3 mb-6">
-          <button onClick={() => navigate(-1)} className="text-blue-700 font-semibold">⬅ Back</button>
-          <h2 className="text-3xl font-bold text-blue-900">CPVC Products</h2>
+        <div className="mb-6 text-center">
+          <h2 className="text-4xl font-bold text-blue-900 mb-2">CPVC Products</h2>
+          <p className="text-gray-700 text-lg">Best prices for you</p>
+        </div>
+
+        <div className="flex justify-center mb-8">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full md:w-1/2 px-4 py-3 rounded-xl border border-blue-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+          />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {products.map((item) => {
+          {filteredProducts.map((item) => {
             const variant = getSelectedVariant(item);
             const cartId = `${item.id}-${variant.size}`;
             const cartItem = getCartItem(cartId);

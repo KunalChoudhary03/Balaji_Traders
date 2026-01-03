@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import img1 from "../assets/Swr/Clip.webp";
 import img2 from "../assets/Swr/Door Elbow_.webp";
@@ -78,7 +77,6 @@ const products = [
 
 
 const Swr = () => {
-  const navigate = useNavigate();
   const { addToCart, updateQuantity, cartItems } = useCart();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedVariants, setSelectedVariants] = useState({});
@@ -112,9 +110,9 @@ const Swr = () => {
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <button onClick={() => navigate(-1)} className="text-blue-700 font-semibold">⬅ Back</button>
-          <h2 className="text-3xl font-bold text-blue-900">SWR Products</h2>
+        <div className="mb-6 text-center">
+          <h2 className="text-4xl font-bold text-blue-900 mb-2">SWR Products</h2>
+          <p className="text-gray-700 text-lg">Best prices for you</p>
         </div>
 
         {/* Search */}

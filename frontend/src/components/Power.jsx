@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { toast } from "react-toastify";
 import img1 from "../assets/Power/4s black.webp";
@@ -94,7 +93,6 @@ const products = [
 ];
 
 const Power = () => {
-  const navigate = useNavigate();
   const { addToCart, updateQuantity, cartItems } = useCart();
   const [selectedVariants, setSelectedVariants] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
@@ -128,9 +126,9 @@ const Power = () => {
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <button onClick={() => navigate(-1)} className="text-blue-700 font-semibold">⬅ Back</button>
-          <h2 className="text-3xl font-bold text-blue-900">Power Products</h2>
+        <div className="mb-6 text-center">
+          <h2 className="text-4xl font-bold text-blue-900 mb-2">Power Products</h2>
+          <p className="text-gray-700 text-lg">Best prices for you</p>
         </div>
 
         {/* Search */}
