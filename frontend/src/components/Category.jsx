@@ -1,25 +1,35 @@
 import { useNavigate } from "react-router-dom";
 import Footer from './Footer'
+import ChadhImg from "../assets/Chadh/Chadhimg.jpg";
+import CpvcImg from "../assets/Cpvc/Cpvcimg.jpg";
+import PowerImg from "../assets/Power/Powerimg.jpg";
+import SwrImg from "../assets/Swr/Swrimg.jpg";
+
 const categories = [
   { 
     name: "Chadh", 
     path: "/chadh",
-    description: "High-quality Chadh pipes for all plumbing needs"
+    description: "High-quality Chadh pipes for all plumbing needs",
+    image: ChadhImg
+
   },
   { 
     name: "CPVC", 
     path: "/cpvc",
-    description: "Durable CPVC pipes for hot & cold water systems"
+    description: "Durable CPVC pipes for hot & cold water systems",
+    image: CpvcImg
   },
   { 
     name: "Power", 
     path: "/power",
-    description: "Premium power cables and electrical solutions"
+    description: "Premium power cables and electrical solutions",
+    image: PowerImg
   },
   { 
     name: "SWR", 
     path: "/swr",
-    description: "Soil, Waste & Rain water drainage pipes"
+    description: "Soil, Waste & Rain water drainage pipes",
+    image: SwrImg
   },
 ];
 
@@ -46,27 +56,28 @@ const Category = () => {
               relative
               overflow-hidden
               group
-              
-              h-32 
               border border-gray-200
-              
-             
-              sm:h-44 
-              sm:border-none
-              
-              flex flex-col items-center justify-center
-              px-4
               hover:shadow-xl hover:scale-105
               transition-all duration-300
+              flex flex-col
             "
           >
-            <span className="text-lg sm:text-xl font-semibold text-gray-800">
-              {cat.name}
-            </span>
+            <div className="w-full h-36 sm:h-44 overflow-hidden">
+              <img
+                src={cat.image}
+                alt={cat.name}
+                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
 
-            <p className="text-xs sm:text-sm text-gray-500 text-center mt-2 px-2">
-              {cat.description}
-            </p>
+            <div className="flex-1 flex flex-col items-center justify-center px-4 py-3 sm:py-4 text-center">
+              <span className="text-lg sm:text-xl font-semibold text-gray-800">
+                {cat.name}
+              </span>
+              <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
+                {cat.description}
+              </p>
+            </div>
 
             {/* Hover effect - "View Products" */}
             <div className="
