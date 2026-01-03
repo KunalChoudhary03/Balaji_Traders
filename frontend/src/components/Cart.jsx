@@ -62,28 +62,28 @@ const Cart = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 px-3 py-6 sm:px-4 sm:py-8">
+    <div className="min-h-screen bg-gray-100 px-3 py-5 sm:px-4 sm:py-8">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8">Your Cart</h2>
+        <h2 className="text-xl sm:text-3xl font-bold text-center mb-5 sm:mb-8">Your Cart</h2>
 
-        <div className="bg-white rounded-xl shadow-md p-3 sm:p-6">
+        <div className="bg-white rounded-xl shadow-md p-2.5 sm:p-6">
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 border-b border-gray-200 py-3 sm:py-4 last:border-b-0"
+              className="flex items-center gap-3 sm:gap-4 border-b border-gray-200 py-2.5 sm:py-4 last:border-b-0"
             >
               <img
                 src={item.image}
                 alt={item.name}
-                className="w-14 h-14 sm:w-20 sm:h-20 object-cover rounded-lg"
+                className="w-12 h-12 sm:w-20 sm:h-20 object-cover rounded-lg"
               />
 
-              <div className="flex-1 w-full sm:w-auto">
-                <h3 className="font-semibold text-sm sm:text-lg">{item.name}</h3>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-sm sm:text-lg leading-tight truncate">{item.name}</h3>
                 <p className="text-green-600 font-semibold text-xs sm:text-base">₹{item.price}</p>
               </div>
 
-              <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <button
                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
                   className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-200 rounded-full hover:bg-gray-300 transition flex items-center justify-center text-sm sm:text-lg"
@@ -105,7 +105,7 @@ const Cart = () => {
                 </button>
               </div>
 
-              <div className="w-full sm:w-24 text-right font-semibold text-green-600 text-sm sm:text-base">
+              <div className="ml-auto text-right font-semibold text-green-600 text-sm sm:text-base min-w-[80px]">
                 ₹{item.price * item.quantity}
               </div>
 

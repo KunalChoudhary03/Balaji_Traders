@@ -156,11 +156,11 @@ const Swr = () => {
                 {/* Variants */}
                 <div>
                   <p className="text-base font-semibold text-gray-700 mb-2">Choose size:</p>
-                  <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-2">
                     {item.variants.map(v => (
                       <label
                         key={v.size}
-                        className="flex flex-col items-center gap-1 cursor-pointer px-2"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-blue-200 bg-white shadow-sm cursor-pointer hover:border-blue-400"
                       >
                         <input
                           type="radio"
@@ -172,7 +172,7 @@ const Swr = () => {
                               [item.id]: v,
                             })
                           }
-                          className="w-5 h-5 cursor-pointer"
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500"
                         />
                         <span className="text-sm font-semibold text-gray-800">{v.size}</span>
                       </label>
