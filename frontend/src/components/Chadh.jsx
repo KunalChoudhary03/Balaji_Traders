@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import img1 from "../assets/Chadh/bend.webp";
 import img2 from "../assets/Chadh/buj.webp";
@@ -37,7 +36,8 @@ const products = [
       { size: "Standard", price: 610 },
       { size: "Heavy", price: 700 },
     ],
-  },{
+  },
+  {
     id: 4,
     name: "Chadh Debbi 1",
     image: img4,
@@ -45,7 +45,8 @@ const products = [
       { size: "Standard", price: 720 },
       { size: "Heavy", price: 800 },
     ],
-  },{
+  },
+  {
     id: 5,
     name: "Chadh Fanbox",
     image: img5,
@@ -53,7 +54,8 @@ const products = [
       { size: "Standard", price: 900 },
       { size: "Heavy", price: 1000 },
     ],
-  },{
+  },
+  {
     id: 6,
     name: "Chadh Pipe",
     image: img6,
@@ -61,7 +63,8 @@ const products = [
       { size: "1 inch", price: 300 },
       { size: "2 inch", price: 400 },
     ],
-  },{
+  },
+  {
     id: 7,
     name: "Chadh Tape",
     image: img7,
@@ -69,11 +72,10 @@ const products = [
       { size: "Standard", price: 150 },
       { size: "Heavy", price: 200 },
     ],
-  }
+  },
 ];
 
 const Chadh = () => {
-  const navigate = useNavigate();
   const { addToCart, updateQuantity, cartItems } = useCart();
   const [selectedVariants, setSelectedVariants] = useState({});
 
@@ -81,14 +83,14 @@ const Chadh = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const getCartItem = (id) =>
-    cartItems.find(item => item.id === id);
-
-  const getSelectedVariant = (product) =>
+  const getVariant = (product) =>
     selectedVariants[product.id] || product.variants[0];
 
+  const getCartItem = (cartId) =>
+    cartItems.find((item) => item.id === cartId);
+
   const handleAddToCart = (product) => {
-    const variant = getSelectedVariant(product);
+    const variant = getVariant(product);
 
     addToCart({
       id: `${product.id}-${variant.size}`,
@@ -97,103 +99,115 @@ const Chadh = () => {
       image: product.image,
     });
 
-    toast.success(`${product.name} (${variant.size}) added 🛒`);
+    toast.success(`${product.name} added 🛒`);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen px-4 py-8">
+      {/* Header */}
+      <div className="max-w-6xl mx-auto mb-8">
+        <h1 className="text-4xl font-bold text-center text-blue-900 mb-2">Chadh Products</h1>
+        <p className="text-center text-gray-700 text-lg">Best prices for you</p>
+      </div>
 
-        <h2 className="text-2xl font-semibold mb-6">Chadh Products</h2>
+      {/* Products Grid */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {products.map((product) => {
+          const variant = getVariant(product);
+          const cartId = `${product.id}-${variant.size}`;
+          const cartItem = getCartItem(cartId);
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((item) => {
-            const selectedVariant = getSelectedVariant(item);
-            const cartId = `${item.id}-${selectedVariant.size}`;
-            const cartItem = getCartItem(cartId);
-
-            return (
-              <div
-                key={item.id}
-                className="bg-white rounded-2xl shadow-md border p-4 flex flex-col gap-3"
-              >
-                {/* Image */}
+          return (
+            <div
+              key={product.id}
+              className="bg-white rounded-xl shadow-md p-4 flex flex-col gap-3 hover:shadow-lg transition-all duration-300 border border-blue-100"
+            >
+              {/* Image Container */}
+              <div className="bg-blue-50 rounded-lg p-3 flex items-center justify-center h-40">
                 <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-48 object-contain"
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-full object-contain"
                 />
+              </div>
 
-                {/* Name + Price */}
-                <div className="flex justify-between items-center">
-                  <h3 className="font-semibold text-lg">{item.name}</h3>
-                  <span className="text-blue-600 font-bold">
-                    ₹{selectedVariant.price}
-                  </span>
-                </div>
+              {/* Product Name & Price */}
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-lg font-bold text-gray-800">
+                  {product.name}
+                </p>
+                <p className="text-orange-600 font-bold text-xl">
+                  ₹{variant.price}
+                </p>
+              </div>
 
-                {/* Variants */}
-                <div className="space-y-2">
-                  {item.variants.map((variant) => (
+              {/* Size Selection */}
+              <div>
+                <div className="flex flex-wrap items-center gap-3">
+                  {product.variants.map((v) => (
                     <label
-                      key={variant.size}
-                      className="flex justify-between items-center text-sm cursor-pointer"
+                      key={v.size}
+                      className="flex flex-col items-center gap-1 cursor-pointer px-2"
                     >
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="radio"
-                          name={`variant-${item.id}`}
-                          checked={selectedVariant.size === variant.size}
-                          onChange={() =>
-                            setSelectedVariants({
-                              ...selectedVariants,
-                              [item.id]: variant,
-                            })
-                          }
-                        />
-                        <span>{variant.size}</span>
-                      </div>
+                      <input
+                        type="radio"
+                        name={`variant-${product.id}`}
+                        checked={variant.size === v.size}
+                        onChange={() =>
+                          setSelectedVariants({
+                            ...selectedVariants,
+                            [product.id]: v,
+                          })
+                        }
+                        className="w-5 h-5 cursor-pointer"
+                      />
+                      <span className="text-sm font-semibold text-gray-800">{v.size}</span>
                     </label>
                   ))}
                 </div>
+              </div>
 
-                {/* Cart */}
+              {/* Cart Buttons */}
+              <div className="mt-auto">
                 {cartItem ? (
-                  <div className="flex items-center justify-between bg-gray-100 rounded-xl px-3 py-2">
+                  <div className="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
                     <button
                       onClick={() =>
                         updateQuantity(cartId, cartItem.quantity - 1)
                       }
-                      className="w-9 h-9 bg-white rounded-full shadow font-bold"
+                      className="w-10 h-10 bg-white rounded-full font-bold text-xl text-blue-700 hover:bg-gray-100 transition-all"
                     >
                       −
                     </button>
 
-                    <span className="font-semibold">
-                      {cartItem.quantity}
-                    </span>
+                    <div className="flex flex-col items-center">
+                      <span className="text-blue-700 font-bold text-xs">Total</span>
+                      <span className="font-bold text-xl text-blue-800">
+                        {cartItem.quantity}
+                      </span>
+                    </div>
 
                     <button
                       onClick={() =>
                         updateQuantity(cartId, cartItem.quantity + 1)
                       }
-                      className="w-9 h-9 bg-white rounded-full shadow font-bold"
+                      className="w-10 h-10 bg-white rounded-full font-bold text-xl text-blue-700 hover:bg-gray-100 transition-all"
                     >
                       +
                     </button>
                   </div>
                 ) : (
                   <button
-                    onClick={() => handleAddToCart(item)}
-                    className="w-full py-2.5 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700"
+                    onClick={() => handleAddToCart(product)}
+                    className="w-full py-3 rounded-xl bg-blue-500 text-white text-lg font-bold hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl active:scale-95"
                   >
-                    Add to Cart
+                     Add to Cart
                   </button>
                 )}
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
