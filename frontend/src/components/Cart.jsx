@@ -70,7 +70,7 @@ const Cart = () => {
           {cartItems.map((item) => (
             <div
               key={item.id}
-              className="flex items-center gap-3 sm:gap-4 border-b border-gray-200 py-2.5 sm:py-4 last:border-b-0"
+              className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:gap-4 border-b border-gray-200 py-2.5 sm:py-4 last:border-b-0"
             >
               <img
                 src={item.image}
@@ -78,7 +78,7 @@ const Cart = () => {
                 className="w-12 h-12 sm:w-20 sm:h-20 object-cover rounded-lg"
               />
 
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-[140px] sm:min-w-0">
                 <h3 className="font-semibold text-sm sm:text-lg leading-tight truncate">{item.name}</h3>
                 <p className="text-green-600 font-semibold text-xs sm:text-base">₹{item.price}</p>
               </div>
@@ -105,7 +105,7 @@ const Cart = () => {
                 </button>
               </div>
 
-              <div className="ml-auto text-right font-semibold text-green-600 text-sm sm:text-base min-w-[80px]">
+              <div className="w-full sm:w-auto sm:ml-auto text-right font-semibold text-green-600 text-sm sm:text-base min-w-[70px] sm:min-w-[80px]">
                 ₹{item.price * item.quantity}
               </div>
 
