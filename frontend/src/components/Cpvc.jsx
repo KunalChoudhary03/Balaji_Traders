@@ -17,7 +17,7 @@ import Categories from '../context/Categories';
 const products = [
   {
     id: 1,
-    name: "CPVC Ball Valve",
+    name: "Ball Valve",
     image: img1,
     variants: [
       { size: "1/2 inch", price: 350 },
@@ -26,7 +26,7 @@ const products = [
   },
   {
     id: 2,
-    name: "CPVC Clip",
+    name: " Clip",
     image: img2,
     variants: [
       { size: "20 mm", price: 25 },
@@ -35,7 +35,7 @@ const products = [
   },
   {
     id: 3,
-    name: "CPVC Concealed Valve",
+    name: "Concealed Valve",
     image: img3,
     variants: [ 
       { size: "1/2 inch", price: 400 },
@@ -44,7 +44,7 @@ const products = [
   },
   {
     id: 4,
-    name: "CPVC Coupler",
+    name: " Coupler",
     image: img4,
     variants: [
       { size: "1/2 inch", price: 80 },
@@ -53,7 +53,7 @@ const products = [
   },
   {
     id: 5,
-    name: "CPVC Elbow 45°",
+    name: " Elbow 45°",
     image: img5,  
     variants: [
       { size: "1/2 inch", price: 90 },
@@ -62,7 +62,7 @@ const products = [
   },
   {
     id: 6,
-    name: "CPVC Elbow Brass",
+    name: " Elbow Brass",
     image: img6,
     variants: [
       { size: "1/2 inch", price: 150 },
@@ -71,7 +71,7 @@ const products = [
   },
   {
     id: 7,  
-    name: "CPVC Elbow",
+    name: " Elbow",
     image: img7,
     variants: [ 
       { size: "1/2 inch", price: 70 },
