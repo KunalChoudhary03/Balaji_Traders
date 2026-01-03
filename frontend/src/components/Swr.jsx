@@ -9,6 +9,7 @@ import img5 from "../assets/Swr/Multi Floor Trap_.webp";
 import img6 from "../assets/Swr/Soket_.webp";
 import img7 from "../assets/Swr/Tee.webp";
 import { toast } from "react-toastify";
+import Categories from '../context/Categories';
 
 const products = [
   {
@@ -107,6 +108,7 @@ const Swr = () => {
 
   return (
     <div className="min-h-screen px-4 py-8">
+      <Categories />
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}

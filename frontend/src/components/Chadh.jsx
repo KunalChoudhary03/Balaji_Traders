@@ -8,6 +8,7 @@ import img5 from "../assets/Chadh/fanbox.webp";
 import img6 from "../assets/Chadh/pipe.webp";
 import img7 from "../assets/Chadh/tape.webp";
 import { toast } from "react-toastify";
+import Categories from '../context/Categories';
 
 const products = [
   {
@@ -104,6 +105,7 @@ const Chadh = () => {
 
   return (
     <div className="min-h-screen px-4 py-8">
+      <Categories />
       {/* Header */}
       <div className="max-w-6xl mx-auto mb-8">
         <h1 className="text-4xl font-bold text-center text-blue-900 mb-2">Chadh Products</h1>

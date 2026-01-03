@@ -14,6 +14,7 @@ import img9 from "../assets/Cpvc/MTB.webp";
 import img10 from "../assets/Cpvc/Mtp.webp";
 import img11 from "../assets/Cpvc/Reduser_.webp";
 import img12 from "../assets/Cpvc/Union.webp";
+import Categories from '../context/Categories';
 const products = [
   {
     id: 1,
@@ -109,7 +110,10 @@ const Cpvc = () => {
   };
 
   return (
+         
+         
     <div className="min-h-screen px-4 py-8">
+         <Categories />
       <div className="max-w-6xl mx-auto">
 
         <div className="flex items-center gap-3 mb-6">
@@ -212,7 +216,9 @@ const Cpvc = () => {
         </div>
       </div>
     </div>
+    
   );
+
 };
 
 export default Cpvc;

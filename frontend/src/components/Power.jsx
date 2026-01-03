@@ -11,6 +11,7 @@ import img6 from "../assets/Power/gun blet.webp";
 import img7 from "../assets/Power/normal.webp";
 import img8 from "../assets/Power/petrol tank.webp";
 import img9 from "../assets/Power/Shankar.webp";
+import Categories from '../context/Categories';
 
 const products = [
   {
@@ -123,6 +124,7 @@ const Power = () => {
 
   return (
     <div className="min-h-screen  px-4 py-8">
+      <Categories />
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
