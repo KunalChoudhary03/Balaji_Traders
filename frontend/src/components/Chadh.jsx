@@ -4,6 +4,10 @@ import { useCart } from '../context/CartContext'
 import img1 from "../assets/Chadh/bend.webp";
 import img2 from "../assets/Chadh/buj.webp";
 import img3 from "../assets/Chadh/debbi.webp";
+import img4 from "../assets/Chadh/debbi1.webp";
+import img5 from "../assets/Chadh/fanbox.webp";
+import img6 from "../assets/Chadh/pipe.webp";
+import img7 from "../assets/Chadh/tape.webp";
 import { toast } from "react-toastify";
 
 const products = [
@@ -33,7 +37,39 @@ const products = [
       { size: "Standard", price: 610 },
       { size: "Heavy", price: 700 },
     ],
-  },
+  },{
+    id: 4,
+    name: "Chadh Debbi 1",
+    image: img4,
+    variants: [
+      { size: "Standard", price: 720 },
+      { size: "Heavy", price: 800 },
+    ],
+  },{
+    id: 5,
+    name: "Chadh Fanbox",
+    image: img5,
+    variants: [
+      { size: "Standard", price: 900 },
+      { size: "Heavy", price: 1000 },
+    ],
+  },{
+    id: 6,
+    name: "Chadh Pipe",
+    image: img6,
+    variants: [
+      { size: "1 inch", price: 300 },
+      { size: "2 inch", price: 400 },
+    ],
+  },{
+    id: 7,
+    name: "Chadh Tape",
+    image: img7,
+    variants: [
+      { size: "Standard", price: 150 },
+      { size: "Heavy", price: 200 },
+    ],
+  }
 ];
 
 const Chadh = () => {

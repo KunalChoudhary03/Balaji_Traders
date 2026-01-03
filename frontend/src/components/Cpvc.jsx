@@ -35,6 +35,15 @@ const products = [
   },
   {
     id: 3,
+    name: "CPVC Concealed Valve",
+    image: img3,
+    variants: [ 
+      { size: "1/2 inch", price: 400 },
+      { size: "3/4 inch", price: 480 },
+    ],  
+  },
+  {
+    id: 4,
     name: "CPVC Coupler",
     image: img4,
     variants: [
@@ -42,6 +51,33 @@ const products = [
       { size: "3/4 inch", price: 95 },
     ],
   },
+  {
+    id: 5,
+    name: "CPVC Elbow 45°",
+    image: img5,  
+    variants: [
+      { size: "1/2 inch", price: 90 },
+      { size: "3/4 inch", price: 110 },
+    ],  
+  },
+  {
+    id: 6,
+    name: "CPVC Elbow Brass",
+    image: img6,
+    variants: [
+      { size: "1/2 inch", price: 150 },
+      { size: "3/4 inch", price: 180 },
+    ],
+  },
+  {
+    id: 7,  
+    name: "CPVC Elbow",
+    image: img7,
+    variants: [ 
+      { size: "1/2 inch", price: 70 },
+      { size: "3/4 inch", price: 85 },
+    ],    
+  }
 ];
 
 const Cpvc = () => {

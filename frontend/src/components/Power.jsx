@@ -48,6 +48,48 @@ const products = [
       { size: "Single", price: 150 },
     ],
   },
+  {
+    id: 5,
+    name: "Carb",
+    image: img5,
+    variants: [
+      { size: "Standard", price: 200 },
+    ],
+  },
+  {
+    id: 6,
+    name: "Gun Belt",
+    image: img6,
+    variants: [
+      { size: "Standard", price: 300 },
+    ],
+  },
+  {
+    id: 7,
+    name: "Normal Cable",
+    image: img7,
+    variants: [ 
+      { size: "Standard", price: 400 },
+    ],  
+  },  
+  {
+    id: 8,
+    name: "Petrol Tank",  
+    image: img8,  
+    variants: [  
+      { size: "Small", price: 750 },    
+      { size: "Large", price: 1200 },
+    ],  
+  },  
+  { 
+    id: 9,
+    name: "Shankar Cable",
+    image: img9,
+    variants: [
+      { size: "Standard", price: 500 },
+    ],
+  },    
+  
 ];
 
 const Power = () => {
