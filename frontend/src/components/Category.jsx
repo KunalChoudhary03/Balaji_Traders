@@ -37,7 +37,7 @@ const Category = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-6 sm:py-10">
+    <div className="min-h-screen bg-gray-100 px-4 pt-6 pb-16 sm:pt-10 sm:pb-20">
       
       <h2 className="text-xl sm:text-2xl font-semibold text-center mb-4 sm:mb-8">
         Categories
