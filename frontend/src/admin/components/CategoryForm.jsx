@@ -47,11 +47,13 @@ const CategoryForm = ({ onSuccess }) => {
         body: submitData
       });
 
+      const result = await response.json().catch(() => ({}));
+
       if (!response.ok) {
-        throw new Error('Failed to create category');
+        throw new Error(result.message || 'Failed to create category');
       }
 
-      setMessage({ type: 'success', text: 'Category created successfully!' });
+      setMessage({ type: 'success', text: result?.message || 'Category created successfully!' });
       setFormData({ name: '', description: '', image: null });
       setPreview('');
       if (onSuccess) onSuccess();

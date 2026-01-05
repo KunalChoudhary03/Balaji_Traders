@@ -9,6 +9,8 @@ const createCategory = async (req, res) => {
       return res.status(400).json({ message: "Name and image file are required" });
     }
 
+    console.log("Creating category:", { name, hasFile: !!req.file, filePath: req.file?.path, secureUrl: req.file?.secure_url });
+
     const category = new Category({
       name,
       description: description || "",
@@ -18,8 +20,8 @@ const createCategory = async (req, res) => {
     await category.save();
     res.status(201).json({ message: "Category created", category });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    console.error("Error creating category:", error);
+    res.status(500).json({ message: error.message || "Server Error" });
   }
 };
 
