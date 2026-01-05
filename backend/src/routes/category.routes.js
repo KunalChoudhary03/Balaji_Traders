@@ -1,17 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const upload = require("../middleware/upload");
-const { createCategory, getAllCategories } = require("../controller/category.controller");
+const {
+  createCategory,
+  getAllCategories,
+} = require("../controller/category.controller");
 
-// Wrap multer to catch upload errors and return a clear message
+// Multer error handler wrapper
 const handleUpload = (req, res, next) => {
-	upload.single('image')(req, res, (err) => {
-		if (err) {
-			console.error('Category upload error:', err);
-			return res.status(400).json({ message: err.message || 'Image upload failed' });
-		}
-		next();
-	});
+  upload.single("image")(req, res, (err) => {
+    if (err) {
+      console.error("Category upload error:", err);
+      return res.status(400).json({
+        success: false,
+        message: err.message || "Image upload failed",
+      });
+    }
+    next();
+  });
 };
 
 // Routes

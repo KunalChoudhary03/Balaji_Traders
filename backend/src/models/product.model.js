@@ -1,40 +1,49 @@
-const mongoose = require('mongoose');
+const express = require("express");
+const router = express.Router();
 
-const variantSchema = new mongoose.Schema({
-    size: {
-        type: String,
-        required: true
-    },
-    price: {
-        type: Number,
-        required: true
-    },
-    showPrice: {          
-        type: Boolean,
-        default: true     
+const {
+  createProduct,
+  getAllProducts,
+  getProductsByCategory,
+  toggleProductPrice,
+  toggleAllPrices,
+} = require("../controller/product.controller");
+
+const upload = require("../middleware/upload");
+
+/**
+ * MULTER ERROR HANDLER
+ */
+const handleUpload = (req, res, next) => {
+  upload.single("image")(req, res, (err) => {
+    if (err) {
+      console.error("Product upload error:", err);
+      return res.status(400).json({
+        success: false,
+        message: err.message || "Image upload failed",
+      });
     }
-});
+    next();
+  });
+};
 
-const productSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    image: {
-        type: String, 
-        required: true
-    },
-    category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Category",
-        required: true
-    },
-    variants: [variantSchema], 
-    isActive: {
-        type: Boolean,
-        default: true
-    }
-}, { timestamps: true });
+/**
+ * ROUTES
+ */
 
-module.exports = mongoose.model('Product', productSchema);
+// Create product (Admin)
+router.post("/create", handleUpload, createProduct);
+
+// Get all products
+router.get("/all", getAllProducts);
+
+// Get products by category
+router.get("/category/:categoryId", getProductsByCategory);
+
+// Toggle price visibility (single product)
+router.patch("/price-toggle/:productId", toggleProductPrice);
+
+// Toggle price visibility (all products)
+router.patch("/toggle-all-prices", toggleAllPrices);
+
+module.exports = router;

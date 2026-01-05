@@ -1,34 +1,49 @@
-const multer = require('multer');
-const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const express = require("express");
+const router = express.Router();
 
-const cloudName = (process.env.CLOUDINARY_CLOUD_NAME || '').toLowerCase();
-const apiKey = process.env.CLOUDINARY_API_KEY;
-const apiSecret = process.env.CLOUDINARY_API_SECRET;
+const {
+  createProduct,
+  getAllProducts,
+  getProductsByCategory,
+  toggleProductPrice,
+  toggleAllPrices,
+} = require("../controller/product.controller");
 
-// Guardrail: log if Cloudinary env is missing to surface config issues
-if (!cloudName || !apiKey || !apiSecret) {
-  console.error('Cloudinary env missing. Please set CLOUDINARY_CLOUD_NAME/API_KEY/API_SECRET.');
-}
+const upload = require("../middleware/upload");
 
-cloudinary.config({
-  cloud_name: cloudName,
-  api_key: apiKey,
-  api_secret: apiSecret
-});
+/**
+ * MULTER ERROR HANDLER
+ */
+const handleUpload = (req, res, next) => {
+  upload.single("image")(req, res, (err) => {
+    if (err) {
+      console.error("Product upload error:", err);
+      return res.status(400).json({
+        success: false,
+        message: err.message || "Image upload failed",
+      });
+    }
+    next();
+  });
+};
 
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'balaji-traders/categories',
-    resource_type: 'auto',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp']
-  }
-});
+/**
+ * ROUTES
+ */
 
-const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
-});
+// Create product (Admin)
+router.post("/create", handleUpload, createProduct);
 
-module.exports = upload;
+// Get all products
+router.get("/all", getAllProducts);
+
+// Get products by category
+router.get("/category/:categoryId", getProductsByCategory);
+
+// Toggle price visibility (single product)
+router.patch("/price-toggle/:productId", toggleProductPrice);
+
+// Toggle price visibility (all products)
+router.patch("/toggle-all-prices", toggleAllPrices);
+
+module.exports = router;

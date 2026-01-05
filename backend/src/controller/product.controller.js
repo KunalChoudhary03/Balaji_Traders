@@ -1,11 +1,13 @@
 const Product = require("../models/product.model");
 
-// Add new product
+/**
+ * CREATE PRODUCT
+ */
 const createProduct = async (req, res) => {
   try {
     let { name, category, variants } = req.body;
 
-    // Parse variants if sent as JSON string (multipart/form-data case)
+    // Parse variants if sent as string (multipart/form-data)
     if (typeof variants === "string") {
       try {
         variants = JSON.parse(variants);
@@ -14,106 +16,154 @@ const createProduct = async (req, res) => {
       }
     }
 
-    const image = req.file?.secure_url || req.file?.path || req.body.image;
-
-    if (!name || !image || !category || !variants || !variants.length) {
+    // Basic validations
+    if (!name || !category || !variants || !variants.length) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Normalize variants: ensure price is number and showPrice defaults true
+    // Image must come from upload
+    if (!req.file) {
+      return res.status(400).json({ message: "Product image is required" });
+    }
+
+    // Prevent duplicate product in same category
+    const exists = await Product.findOne({ name, category });
+    if (exists) {
+      return res.status(409).json({ message: "Product already exists" });
+    }
+
+    // Normalize & validate variants
     const normalizedVariants = variants.map((v) => ({
       size: v.size,
       price: Number(v.price),
-      showPrice: v.showPrice !== false
+      showPrice: v.showPrice !== false, // default true
     }));
 
-    if (normalizedVariants.some(v => !v.size || Number.isNaN(v.price))) {
-      return res.status(400).json({ message: "Variant size and price are required" });
+    const invalidVariant = normalizedVariants.some(
+      (v) => !v.size || Number.isNaN(v.price)
+    );
+
+    if (invalidVariant) {
+      return res
+        .status(400)
+        .json({ message: "Each variant must have size and price" });
     }
 
-    const product = new Product({
+    const product = await Product.create({
       name,
-      image,
       category,
-      variants: normalizedVariants
+      image: req.file.path, // Cloudinary URL
+      variants: normalizedVariants,
     });
 
-    await product.save();
-    res.status(201).json({ message: "Product created", product });
+    res.status(201).json({
+      success: true,
+      message: "Product created successfully",
+      product,
+    });
   } catch (error) {
     console.error("Create product error:", error);
-    res.status(500).json({ message: error.message || "Server Error" });
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
-// Get all products
+/**
+ * GET ALL PRODUCTS
+ */
 const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find().populate("category");
     res.status(200).json(products);
   } catch (error) {
-    console.error(error);
+    console.error("Get all products error:", error);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
-// Get products by category
+/**
+ * GET PRODUCTS BY CATEGORY
+ */
 const getProductsByCategory = async (req, res) => {
   try {
-    const products = await Product.find({ category: req.params.categoryId }).populate("category");
+    const { categoryId } = req.params;
+
+    const products = await Product.find({ category: categoryId }).populate(
+      "category"
+    );
+
     res.status(200).json(products);
   } catch (error) {
-    console.error(error);
+    console.error("Get products by category error:", error);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
-// Toggle price visibility
+/**
+ * TOGGLE PRICE VISIBILITY (SINGLE PRODUCT)
+ */
 const toggleProductPrice = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.productId);
-    if (!product) return res.status(404).json({ message: "Product not found" });
+    const { productId } = req.params;
 
-    product.variants.forEach(v => v.showPrice = !v.showPrice); // optional if per variant price toggle
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    product.variants.forEach((v) => {
+      v.showPrice = !v.showPrice;
+    });
+
     await product.save();
 
-    res.status(200).json({ message: "Price toggled", product });
+    res.status(200).json({
+      success: true,
+      message: "Product price visibility toggled",
+      product,
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Toggle product price error:", error);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
-// Toggle all products price visibility
+/**
+ * TOGGLE PRICE VISIBILITY (ALL PRODUCTS)
+ */
 const toggleAllPrices = async (req, res) => {
   try {
     const products = await Product.find();
-    
-    // Check current state of first product to decide toggle direction
-    const currentState = products[0]?.variants[0]?.showPrice || false;
+
+    if (!products.length) {
+      return res.status(404).json({ message: "No products found" });
+    }
+
+    // Decide new state based on first variant
+    const currentState = products[0].variants[0].showPrice;
     const newState = !currentState;
-    
-    // Update all products
+
     for (const product of products) {
-      product.variants.forEach(v => v.showPrice = newState);
+      product.variants.forEach((v) => {
+        v.showPrice = newState;
+      });
       await product.save();
     }
 
-    res.status(200).json({ 
-      message: `All prices ${newState ? 'shown' : 'hidden'}`, 
-      showPrice: newState 
+    res.status(200).json({
+      success: true,
+      message: `All prices ${newState ? "shown" : "hidden"}`,
+      showPrice: newState,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Toggle all prices error:", error);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
-module.exports ={
+module.exports = {
   createProduct,
   getAllProducts,
   getProductsByCategory,
   toggleProductPrice,
-  toggleAllPrices
-}
-
+  toggleAllPrices,
+};

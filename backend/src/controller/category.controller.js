@@ -1,57 +1,35 @@
-const Category = require("../models/category.model");
-
-// Add new category
 const createCategory = async (req, res) => {
   try {
-    const { name, description, image: imageUrlFromBody } = req.body;
+    const { name, description } = req.body;
 
     if (!name) {
       return res.status(400).json({ message: "Name is required" });
     }
 
-    const hasUpload = !!req.file;
-    const finalImage = hasUpload ? (req.file.secure_url || req.file.path) : imageUrlFromBody;
-
-    if (!finalImage) {
-      return res.status(400).json({ message: "Image is required (upload or URL)" });
+    if (!req.file) {
+      return res.status(400).json({ message: "Image upload is required" });
     }
 
-    console.log("Creating category:", {
-      name,
-      hasUpload,
-      filePath: req.file?.path,
-      secureUrl: req.file?.secure_url
-    });
+    const exists = await Category.findOne({ name });
+    if (exists) {
+      return res.status(409).json({ message: "Category already exists" });
+    }
 
-    const category = new Category({
+    const category = await Category.create({
       name,
       description: description || "",
-      image: finalImage
+      image: req.file.path, // Cloudinary URL
     });
 
-    await category.save();
-    res.status(201).json({ message: "Category created", category });
+    res.status(201).json({
+      success: true,
+      message: "Category created",
+      category,
+    });
   } catch (error) {
     console.error("Error creating category:", error);
-    res.status(500).json({ message: error.message || "Server Error" });
+    res.status(500).json({
+      message: "Server Error",
+    });
   }
-};
-
-// Get all categories
-const getAllCategories = async (req, res) => {
-  try {
-    console.log("Fetching all categories...");
-    const categories = await Category.find();
-    console.log(`Found ${categories.length} categories`);
-    res.status(200).json(categories);
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-    res.status(500).json({ message: "Server Error" });
-  }
-};
-
-
-module.exports = {
-  createCategory,
-  getAllCategories
 };
