@@ -3,18 +3,30 @@ const Category = require("../models/category.model");
 // Add new category
 const createCategory = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, image: imageUrlFromBody } = req.body;
 
-    if (!name || !req.file) {
-      return res.status(400).json({ message: "Name and image file are required" });
+    if (!name) {
+      return res.status(400).json({ message: "Name is required" });
     }
 
-    console.log("Creating category:", { name, hasFile: !!req.file, filePath: req.file?.path, secureUrl: req.file?.secure_url });
+    const hasUpload = !!req.file;
+    const finalImage = hasUpload ? (req.file.secure_url || req.file.path) : imageUrlFromBody;
+
+    if (!finalImage) {
+      return res.status(400).json({ message: "Image is required (upload or URL)" });
+    }
+
+    console.log("Creating category:", {
+      name,
+      hasUpload,
+      filePath: req.file?.path,
+      secureUrl: req.file?.secure_url
+    });
 
     const category = new Category({
       name,
       description: description || "",
-      image: req.file.secure_url || req.file.path
+      image: finalImage
     });
 
     await category.save();
