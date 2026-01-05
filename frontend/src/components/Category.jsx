@@ -1,49 +1,42 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Footer from './Footer'
-import ChadhImg from "../assets/Chadh/Chadhimg.jpg";
-import CpvcImg from "../assets/Cpvc/Cpvcimg.jpg";
-import PowerImg from "../assets/Power/Powerimg.jpg";
-import SwrImg from "../assets/Swr/Swrimg.jpg";
-
-const categories = [
-  { 
-    name: "Chadh", 
-    path: "/chadh",
-    description: "High-quality Chadh pipes for all plumbing needs",
-    image: ChadhImg
-
-  },
-  { 
-    name: "CPVC", 
-    path: "/cpvc",
-    description: "Durable CPVC pipes for hot & cold water systems",
-    image: CpvcImg
-  },
-  { 
-    name: "Power", 
-    path: "/power",
-    description: "Premium power cables and electrical solutions",
-    image: PowerImg
-  },
-  { 
-    name: "SWR", 
-    path: "/swr",
-    description: "Soil, Waste & Rain water drainage pipes",
-    image: SwrImg
-  },
-];
+import axios from "axios";
+import Footer from './Footer';
 
 const Category = () => {
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+      const { data } = await axios.get(`${API_BASE_URL}/category/all`);
+      setCategories(data);
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
+      setCategories([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleShare = (e, cat) => {
     e.stopPropagation();
     const text = encodeURIComponent(
-      `Check out ${cat.name} products: ${window.location.origin}${cat.path}`
+      `Check out ${cat.name} products: ${window.location.origin}/category/${cat._id}`
     );
     const url = `https://wa.me/?text=${text}`;
     window.open(url, "_blank");
   };
+
+  if (loading) {
+    return <div className="min-h-screen bg-gray-100 flex items-center justify-center">Loading categories...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 px-4 pt-6 pb-16 sm:pt-10 sm:pb-20">
@@ -53,10 +46,10 @@ const Category = () => {
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto ">
-        {categories.map((cat, index) => (
+        {categories.map((cat) => (
           <div
-            key={index}
-            onClick={() => navigate(cat.path)}
+            key={cat._id}
+            onClick={() => navigate(`/category/${cat._id}`)}
             className="
               cursor-pointer 
               bg-white 
@@ -74,6 +67,9 @@ const Category = () => {
                 src={cat.image}
                 alt={cat.name}
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.src = 'https://via.placeholder.com/400x300?text=No+Image';
+                }}
               />
             </div>
 
@@ -81,9 +77,11 @@ const Category = () => {
               <span className="text-lg sm:text-xl font-semibold text-gray-800">
                 {cat.name}
               </span>
-              <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
-                {cat.description}
-              </p>
+              {cat.description && (
+                <p className="text-xs sm:text-sm text-gray-500 mt-1 sm:mt-2">
+                  {cat.description}
+                </p>
+              )}
             </div>
 
             <button
