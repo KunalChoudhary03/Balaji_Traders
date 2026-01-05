@@ -153,7 +153,7 @@ const CategoryProducts = () => {
               return (
                 <div
                   key={product._id}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full"
                 >
                   {/* Product Image */}
                   <div className="bg-blue-50 rounded-lg p-2 sm:p-3 flex items-center justify-center h-24 sm:h-40">
@@ -165,22 +165,22 @@ const CategoryProducts = () => {
               </div>
 
                   {/* Product Details */}
-                  <div className="p-2 sm:p-4">
+                  <div className="p-2 sm:p-4 flex flex-col flex-1">
                     {/* Product Name and Price */}
                     <div className="flex items-center justify-between mb-2 sm:mb-4">
-                      <h3 className="text-sm sm:text-xl font-bold text-gray-800">
+                      <h3 className="text-sm sm:text-xl font-bold text-gray-800 line-clamp-2">
                         {product.name}
                       </h3>
                       {variant.showPrice && (
-                        <p className="text-sm sm:text-xl font-bold text-orange-500">
+                        <p className="text-sm sm:text-xl font-bold text-orange-500 flex-shrink-0 ml-2">
                           ₹{variant.price}
                         </p>
                       )}
                     </div>
 
-                    {/* Variant Selection - Radio Buttons */}
+                    {/* Variant Selection - Single Column */}
                     {product.variants && product.variants.length > 0 && (
-                      <div className="mb-2 sm:mb-4 flex gap-2 sm:gap-3 flex-wrap">
+                      <div className="mb-2 sm:mb-4 flex flex-col gap-1 sm:gap-2">
                         {product.variants.map((v, idx) => (
                           <label
                             key={idx}
@@ -211,33 +211,35 @@ const CategoryProducts = () => {
                       </div>
                     )}
 
-                    {/* Add to Cart or Quantity Controls */}
-                    {cartItem ? (
-                      <div className="flex items-center justify-between bg-blue-50 rounded-lg p-2 sm:p-3">
+                    {/* Add to Cart or Quantity Controls - Pushed to Bottom */}
+                    <div className="mt-auto pt-2 sm:pt-4">
+                      {cartItem ? (
+                        <div className="flex items-center justify-between bg-blue-50 rounded-lg p-2 sm:p-3">
+                          <button
+                            onClick={() => handleQuantityChange(product, -1)}
+                            className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition font-bold text-sm sm:text-lg"
+                          >
+                            -
+                          </button>
+                          <span className="font-bold text-gray-800 text-sm sm:text-lg">
+                            {cartItem.quantity}
+                          </span>
+                          <button
+                            onClick={() => handleQuantityChange(product, 1)}
+                            className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition font-bold text-sm sm:text-lg"
+                          >
+                            +
+                          </button>
+                        </div>
+                      ) : (
                         <button
-                          onClick={() => handleQuantityChange(product, -1)}
-                          className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition font-bold text-sm sm:text-lg"
+                          onClick={() => handleAddToCart(product)}
+                          className="w-full bg-blue-600 text-white py-2 sm:py-3 rounded-lg hover:bg-blue-700 transition font-semibold text-sm sm:text-base"
                         >
-                          -
+                          Add to Cart
                         </button>
-                        <span className="font-bold text-gray-800 text-sm sm:text-lg">
-                          {cartItem.quantity}
-                        </span>
-                        <button
-                          onClick={() => handleQuantityChange(product, 1)}
-                          className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition font-bold text-sm sm:text-lg"
-                        >
-                          +
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => handleAddToCart(product)}
-                        className="w-full bg-blue-600 text-white py-2 sm:py-3 rounded-lg hover:bg-blue-700 transition font-semibold text-sm sm:text-base"
-                      >
-                        Add to Cart
-                      </button>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               );
