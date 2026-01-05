@@ -144,7 +144,7 @@ const CategoryProducts = () => {
             <p className="text-gray-600 text-lg">No products found in this category.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 pb-6">
             {filteredProducts.map((product) => {
               const variant = getVariant(product);
               const cartId = `${product._id}-${variant.size}`;
@@ -156,7 +156,7 @@ const CategoryProducts = () => {
                   className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
                 >
                   {/* Product Image */}
-                  <div className="bg-blue-50 rounded-lg p-3 flex items-center justify-center h-40">
+                  <div className="bg-blue-50 rounded-lg p-2 sm:p-3 flex items-center justify-center h-24 sm:h-40">
                 <img
                   src={product.image}
                   alt={product.name}
@@ -165,14 +165,14 @@ const CategoryProducts = () => {
               </div>
 
                   {/* Product Details */}
-                  <div className="p-4">
+                  <div className="p-2 sm:p-4">
                     {/* Product Name and Price */}
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-xl font-bold text-gray-800">
+                    <div className="flex items-center justify-between mb-2 sm:mb-4">
+                      <h3 className="text-sm sm:text-xl font-bold text-gray-800">
                         {product.name}
                       </h3>
                       {variant.showPrice && (
-                        <p className="text-xl font-bold text-orange-500">
+                        <p className="text-sm sm:text-xl font-bold text-orange-500">
                           ₹{variant.price}
                         </p>
                       )}
@@ -180,11 +180,11 @@ const CategoryProducts = () => {
 
                     {/* Variant Selection - Radio Buttons */}
                     {product.variants && product.variants.length > 0 && (
-                      <div className="mb-4 flex gap-3 flex-wrap">
+                      <div className="mb-2 sm:mb-4 flex gap-2 sm:gap-3 flex-wrap">
                         {product.variants.map((v, idx) => (
                           <label
                             key={idx}
-                            className="flex items-center gap-2 px-4 py-2 border-2 rounded-lg cursor-pointer transition hover:border-blue-500"
+                            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1 sm:py-2 border-2 rounded-lg cursor-pointer transition hover:border-blue-500 text-xs sm:text-sm"
                             style={{
                               borderColor: variant.size === v.size ? '#3b82f6' : '#e5e7eb',
                               backgroundColor: variant.size === v.size ? '#eff6ff' : 'white'
@@ -201,9 +201,9 @@ const CategoryProducts = () => {
                                   [product._id]: v,
                                 });
                               }}
-                              className="w-4 h-4 text-blue-600"
+                              className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600"
                             />
-                            <span className="text-sm font-medium text-gray-700">
+                            <span className="font-medium text-gray-700">
                               {v.size}
                             </span>
                           </label>
@@ -213,19 +213,19 @@ const CategoryProducts = () => {
 
                     {/* Add to Cart or Quantity Controls */}
                     {cartItem ? (
-                      <div className="flex items-center justify-between bg-blue-50 rounded-lg p-3">
+                      <div className="flex items-center justify-between bg-blue-50 rounded-lg p-2 sm:p-3">
                         <button
                           onClick={() => handleQuantityChange(product, -1)}
-                          className="w-10 h-10 flex items-center justify-center bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition font-bold text-lg"
+                          className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition font-bold text-sm sm:text-lg"
                         >
                           -
                         </button>
-                        <span className="font-bold text-gray-800 text-lg">
+                        <span className="font-bold text-gray-800 text-sm sm:text-lg">
                           {cartItem.quantity}
                         </span>
                         <button
                           onClick={() => handleQuantityChange(product, 1)}
-                          className="w-10 h-10 flex items-center justify-center bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition font-bold text-lg"
+                          className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition font-bold text-sm sm:text-lg"
                         >
                           +
                         </button>
@@ -233,7 +233,7 @@ const CategoryProducts = () => {
                     ) : (
                       <button
                         onClick={() => handleAddToCart(product)}
-                        className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold text-base"
+                        className="w-full bg-blue-600 text-white py-2 sm:py-3 rounded-lg hover:bg-blue-700 transition font-semibold text-sm sm:text-base"
                       >
                         Add to Cart
                       </button>
