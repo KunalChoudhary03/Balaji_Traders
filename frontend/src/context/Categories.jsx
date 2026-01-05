@@ -14,10 +14,13 @@ const Categories = () => {
   const fetchCategories = async () => {
     try {
       const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://balaji-traders-8f7n.onrender.com/api";
+      console.log("Fetching categories from:", `${API_BASE_URL}/category/all`);
       const { data } = await axios.get(`${API_BASE_URL}/category/all`);
+      console.log("Categories fetched:", data);
       setCategories(data);
     } catch (error) {
       console.error("Failed to fetch categories:", error);
+      console.error("Error details:", error.response || error.message);
       setCategories([]);
     } finally {
       setLoading(false);
@@ -26,6 +29,10 @@ const Categories = () => {
 
   if (loading) {
     return <div className="w-full px-4 py-4 text-center">Loading categories...</div>;
+  }
+
+  if (categories.length === 0) {
+    return <div className="w-full px-4 py-4 text-center text-gray-500">No categories available</div>;
   }
 
   return (
