@@ -10,6 +10,11 @@ export const createCategory = (data) => API.post("/category/create", data);
 
 // Products
 export const getProducts = () => API.get("/product/all");
-export const createProduct = (data) => API.post("/product/create", data);
+export const createProduct = (data) => {
+	const isFormData = data instanceof FormData;
+	return API.post("/product/create", data, {
+		headers: isFormData ? { "Content-Type": "multipart/form-data" } : undefined,
+	});
+};
 export const togglePrice = (productId) => API.patch(`/product/price-toggle/${productId}`);
 export const getProductsByCategory = (categoryId) => API.get(`/product/category/${categoryId}`);

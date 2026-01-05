@@ -3,24 +3,46 @@ const Product = require("../models/product.model");
 // Add new product
 const createProduct = async (req, res) => {
   try {
-    const { name, image, category, variants } = req.body;
+    let { name, category, variants } = req.body;
+
+    // Parse variants if sent as JSON string (multipart/form-data case)
+    if (typeof variants === "string") {
+      try {
+        variants = JSON.parse(variants);
+      } catch (err) {
+        return res.status(400).json({ message: "Invalid variants format" });
+      }
+    }
+
+    const image = req.file?.secure_url || req.file?.path || req.body.image;
 
     if (!name || !image || !category || !variants || !variants.length) {
       return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Normalize variants: ensure price is number and showPrice defaults true
+    const normalizedVariants = variants.map((v) => ({
+      size: v.size,
+      price: Number(v.price),
+      showPrice: v.showPrice !== false
+    }));
+
+    if (normalizedVariants.some(v => !v.size || Number.isNaN(v.price))) {
+      return res.status(400).json({ message: "Variant size and price are required" });
     }
 
     const product = new Product({
       name,
       image,
       category,
-      variants
+      variants: normalizedVariants
     });
 
     await product.save();
     res.status(201).json({ message: "Product created", product });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    console.error("Create product error:", error);
+    res.status(500).json({ message: error.message || "Server Error" });
   }
 };
 

@@ -7,9 +7,10 @@ const {
   toggleProductPrice,
   toggleAllPrices
 } = require("../controller/product.controller");
+const upload = require("../middleware/upload");
 
 // Routes
-router.post("/create", createProduct);
+router.post("/create", upload.single('image'), createProduct);
 router.get("/all", getAllProducts);
 router.get("/category/:categoryId", getProductsByCategory);
 router.patch("/price-toggle/:productId", toggleProductPrice);

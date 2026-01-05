@@ -5,9 +5,10 @@ const ProductForm = ({ onSuccess }) => {
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
-    image: '',
     category: ''
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
   const [variants, setVariants] = useState([{ size: '', price: '' }]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
@@ -55,17 +56,23 @@ const ProductForm = ({ onSuccess }) => {
     setMessage({ type: '', text: '' });
 
     try {
-      const productData = {
-        ...formData,
-        variants: variants
-      };
-      await createProduct(productData);
+      const form = new FormData();
+      form.append('name', formData.name);
+      form.append('category', formData.category);
+      form.append('variants', JSON.stringify(variants));
+      if (imageFile) {
+        form.append('image', imageFile);
+      }
+
+      await createProduct(form);
+
       setMessage({ type: 'success', text: 'Product created successfully!' });
       setFormData({ 
         name: '', 
-        image: '', 
         category: ''
       });
+      setImageFile(null);
+      setImagePreview('');
       setVariants([{ size: '', price: '' }]);
       if (onSuccess) onSuccess();
     } catch (error) {
@@ -125,17 +132,25 @@ const ProductForm = ({ onSuccess }) => {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Image URL <span className="text-red-500">*</span>
+          Product Image <span className="text-red-500">*</span>
         </label>
         <input
-          type="text"
-          name="image"
-          value={formData.image}
-          onChange={handleChange}
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            setImageFile(file || null);
+            setImagePreview(file ? URL.createObjectURL(file) : '');
+          }}
           required
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="Enter image URL"
         />
+        {imagePreview && (
+          <div className="mt-3">
+            <p className="text-sm text-gray-600 mb-1">Preview:</p>
+            <img src={imagePreview} alt="Preview" className="h-24 w-24 object-cover rounded border" />
+          </div>
+        )}
       </div>
 
       <div>
