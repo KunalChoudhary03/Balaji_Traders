@@ -1,5 +1,6 @@
 const Category = require("../models/category.model");
 
+// Create category with uploaded image
 const createCategory = async (req, res) => {
   try {
     const { name, description } = req.body;
@@ -34,4 +35,20 @@ const createCategory = async (req, res) => {
       message: "Server Error",
     });
   }
+};
+
+// Get all categories
+const getAllCategories = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    res.status(200).json(categories);
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+module.exports = {
+  createCategory,
+  getAllCategories,
 };
