@@ -17,16 +17,20 @@ const CategoryForm = ({ onSuccess }) => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setFormData({ ...formData, image: file });
-      
-      // Show preview
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+    // Validate image type
+    if (!file.type || !file.type.startsWith('image/')) {
+      setMessage({ type: 'error', text: 'Please select a valid image file.' });
+      return;
     }
+    setFormData({ ...formData, image: file });
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e) => {
@@ -112,6 +116,7 @@ const CategoryForm = ({ onSuccess }) => {
         </label>
         <input
           type="file"
+          name="image"
           accept="image/*"
           onChange={handleImageChange}
           required

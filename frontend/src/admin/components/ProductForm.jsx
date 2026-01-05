@@ -136,11 +136,21 @@ const ProductForm = ({ onSuccess }) => {
         </label>
         <input
           type="file"
+          name="image"
           accept="image/*"
           onChange={(e) => {
             const file = e.target.files?.[0];
-            setImageFile(file || null);
-            setImagePreview(file ? URL.createObjectURL(file) : '');
+            if (!file) {
+              setImageFile(null);
+              setImagePreview('');
+              return;
+            }
+            if (!file.type || !file.type.startsWith('image/')) {
+              setMessage({ type: 'error', text: 'Please select a valid image file.' });
+              return;
+            }
+            setImageFile(file);
+            setImagePreview(URL.createObjectURL(file));
           }}
           required
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
