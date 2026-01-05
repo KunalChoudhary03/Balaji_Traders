@@ -5,13 +5,29 @@ const CategoryForm = ({ onSuccess }) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    image: ''
+    image: null
   });
+  const [preview, setPreview] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, image: file });
+      
+      // Show preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -20,14 +36,30 @@ const CategoryForm = ({ onSuccess }) => {
     setMessage({ type: '', text: '' });
 
     try {
-      await createCategory(formData);
+      const submitData = new FormData();
+      submitData.append('name', formData.name);
+      submitData.append('description', formData.description);
+      submitData.append('image', formData.image);
+
+      // Use fetch for FormData
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://balaji-traders-8f7n.onrender.com/api";
+      const response = await fetch(`${API_BASE_URL}/category/create`, {
+        method: 'POST',
+        body: submitData
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create category');
+      }
+
       setMessage({ type: 'success', text: 'Category created successfully!' });
-      setFormData({ name: '', description: '', image: '' });
+      setFormData({ name: '', description: '', image: null });
+      setPreview('');
       if (onSuccess) onSuccess();
     } catch (error) {
       setMessage({ 
         type: 'error', 
-        text: error.response?.data?.message || 'Failed to create category' 
+        text: error.message || 'Failed to create category' 
       });
     } finally {
       setLoading(false);
@@ -86,6 +118,25 @@ const CategoryForm = ({ onSuccess }) => {
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="Enter image URL"
         />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Category Image <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          required
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+        {preview && (
+          <div className="mt-4">
+            <p className="text-sm text-gray-600 mb-2">Image Preview:</p>
+            <img src={preview} alt="Preview" className="h-40 object-contain rounded-lg border border-gray-300" />
+          </div>
+        )}
       </div>
 
       <button

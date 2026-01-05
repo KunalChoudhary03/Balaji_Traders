@@ -3,16 +3,16 @@ const Category = require("../models/category.model");
 // Add new category
 const createCategory = async (req, res) => {
   try {
-    const { name, description, image } = req.body;
+    const { name, description } = req.body;
 
-    if (!name || !image) {
-      return res.status(400).json({ message: "Name and image are required" });
+    if (!name || !req.file) {
+      return res.status(400).json({ message: "Name and image file are required" });
     }
 
     const category = new Category({
       name,
       description: description || "",
-      image
+      image: req.file.secure_url || req.file.path
     });
 
     await category.save();
