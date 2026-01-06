@@ -24,7 +24,7 @@ const CategoryProducts = () => {
   const fetchCategoryAndProducts = async () => {
     try {
       setLoading(true);
-      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://balaji-traders-8f7n.onrender.com/api";
       
       // Fetch category details
       const categoryResponse = await axios.get(`${API_BASE_URL}/category/all`);

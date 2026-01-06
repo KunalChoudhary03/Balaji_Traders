@@ -14,7 +14,7 @@ const Category = () => {
 
   const fetchCategories = async () => {
     try {
-      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://balaji-traders-8f7n.onrender.com/api";
       const { data } = await axios.get(`${API_BASE_URL}/category/all`);
       setCategories(data);
     } catch (error) {
