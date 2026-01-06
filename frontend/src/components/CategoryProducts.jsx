@@ -153,8 +153,15 @@ const CategoryProducts = () => {
               return (
                 <div
                   key={product._id}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full"
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full relative"
                 >
+                  {/* On Order Badge */}
+                  {product.onOrder && (
+                    <div className="absolute top-2 left-2 bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-md shadow-md z-10">
+                      On Order
+                    </div>
+                  )}
+                  
                   {/* Product Image */}
                   <div className="bg-blue-50 rounded-lg p-2 sm:p-3 flex items-center justify-center h-24 sm:h-40">
                 <img

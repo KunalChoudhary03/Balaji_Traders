@@ -62,11 +62,11 @@ const Category = () => {
               flex flex-col
             "
           >
-            <div className="w-full h-36 sm:h-44 overflow-hidden">
+            <div className="w-full h-36 sm:h-44 overflow-hidden bg-gray-50 flex items-center justify-center">
               <img
                 src={cat.image}
                 alt={cat.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
                 onError={(e) => {
                   e.target.src = 'https://via.placeholder.com/400x300?text=No+Image';
                 }}

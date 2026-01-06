@@ -2,7 +2,7 @@ const Product = require("../models/product.model");
 
 exports.createProduct = async (req, res) => {
   try {
-    let { name, category, image, variants } = req.body;
+    let { name, category, image, variants, onOrder } = req.body;
 
     if (!name || !category || !image || !variants) {
       return res.status(400).json({ message: "All fields required" });
@@ -33,6 +33,7 @@ exports.createProduct = async (req, res) => {
       category,
       image,
       variants: cleanVariants,
+      onOrder: onOrder || false,
     });
 
     res.status(201).json(product);
@@ -50,6 +51,74 @@ exports.getAllProducts = async (req, res) => {
     const products = await Product.find().populate("category");
     res.json(products);
   } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/**
+ * GET PRODUCTS BY CATEGORY
+ */
+exports.getProductsByCategory = async (req, res) => {
+  try {
+    const { categoryId } = req.params;
+    const products = await Product.find({ category: categoryId }).populate("category");
+    res.json(products);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/**
+ * UPDATE PRODUCT
+ */
+exports.updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let { name, category, image, variants, onOrder } = req.body;
+
+    if (typeof variants === "string") {
+      variants = JSON.parse(variants);
+    }
+
+    const cleanVariants = variants.map(v => ({
+      size: v.size,
+      price: Number(v.price),
+      showPrice: v.showPrice !== false,
+    }));
+
+    const product = await Product.findByIdAndUpdate(
+      id,
+      { name, category, image, variants: cleanVariants, onOrder: onOrder || false },
+      { new: true, runValidators: true }
+    ).populate("category");
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.json(product);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/**
+ * DELETE PRODUCT
+ */
+exports.deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findByIdAndDelete(id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.json({ message: "Product deleted successfully" });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };

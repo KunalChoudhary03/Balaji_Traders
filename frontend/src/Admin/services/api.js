@@ -11,4 +11,6 @@ export const createCategory = (data) => API.post("/category/create", data);
 // Products
 export const getProducts = () => API.get("/product/all");
 export const createProduct = (data) => API.post("/product/create", data);
+export const updateProduct = (id, data) => API.put(`/product/update/${id}`, data);
+export const deleteProduct = (id) => API.delete(`/product/delete/${id}`);
 export const toggleAllPrices = () => API.patch("/product/toggle-all-prices");
