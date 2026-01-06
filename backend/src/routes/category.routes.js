@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { createCategory, getAllCategories } = require("../controller/category.controller");
-const upload = require("../middleware/upload");
 
-
-
+// Accept JSON body with image URL; no upload middleware
 router.post("/create", createCategory);
 router.get("/all", getAllCategories);
 

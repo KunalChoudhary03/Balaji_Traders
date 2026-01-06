@@ -19,6 +19,13 @@ const Navbar = () => {
         
         <div className="flex items-center gap-4">
           <button 
+            onClick={() => navigate('/admin')}
+            className="px-4 py-2 border rounded-lg hover:bg-gray-100 transition"
+            title="Admin Portal"
+          >
+            Admin
+          </button>
+          <button 
             onClick={() => navigate('/cart')}
             className="relative p-2 hover:bg-gray-100 rounded-lg transition"
           >

@@ -7,7 +7,7 @@ import Swr from './Swr'
 import Category from './Category'
 import CategoryProducts from './CategoryProducts'
 import Cart from './Cart'
- 
+import Dashboard from '../Admin/components/Dashboard.jsx'
 
 const Router = () => {
   return (
@@ -19,7 +19,7 @@ const Router = () => {
          <Route path="/power" element={<Power />}/>
          <Route path="/swr" element={<Swr />}/>
          <Route path="/cart" element={<Cart />}/>
-         {/* Admin portal removed */}
+         <Route path="/admin" element={<Dashboard />}/>
      </Routes>
   ) 
 }
