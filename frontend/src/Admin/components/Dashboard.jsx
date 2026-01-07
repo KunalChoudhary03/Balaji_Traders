@@ -181,7 +181,7 @@ export default function Dashboard() {
             <div className="mb-4">
               <input
                 type="text"
-                placeholder="🔍 Search products by name or category..."
+                placeholder=" Search products by name or category..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
