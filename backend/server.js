@@ -1,8 +1,9 @@
-const dotenv = require("dotenv");
-dotenv.config();
+import dotenv from "dotenv";
 import axios from "axios";
-const app = require("./src/app");
-const connectDB = require("./src/db/db");
+import app from "./src/app.js";
+import connectDB from "./src/db/db.js";
+
+dotenv.config();
 connectDB();
 
 const url = `https://balaji-traders-8f7n.onrender.com`;

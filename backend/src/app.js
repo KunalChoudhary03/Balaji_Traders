@@ -1,5 +1,5 @@
-const express = require("express");
-const cors = require("cors");
+import express from "express";
+import cors from "cors";
 
 const app = express();
 
@@ -18,8 +18,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //  Routes
-app.use("/api/category", require("./routes/category.routes"));
-app.use("/api/product", require("./routes/products.routes"));
+import categoryRoutes from "./routes/category.routes.js";
+import productRoutes from "./routes/products.routes.js";
+
+app.use("/api/category", categoryRoutes);
+app.use("/api/product", productRoutes);
 
 //  Health check
 app.get("/api/health", (req, res) => {
@@ -27,4 +30,4 @@ app.get("/api/health", (req, res) => {
 });
 
 // ❌ Extra complex error handlers hata diye
-module.exports = app;
+export default app;

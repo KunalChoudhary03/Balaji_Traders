@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "balaji-traders-backend",
   "version": "1.0.0",
   "description": "Balaji Traders Backend API",

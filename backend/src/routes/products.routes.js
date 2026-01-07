@@ -1,14 +1,14 @@
-const express = require("express");
-const router = express.Router();
-
-const {
+import express from "express";
+import {
   createProduct,
   getAllProducts,
   toggleAllPrices,
   getProductsByCategory,
   updateProduct,
   deleteProduct,
-} = require("../controller/product.controller");
+} from "../controller/product.controller.js";
+
+const router = express.Router();
 
 router.post("/create", createProduct);
 router.get("/all", getAllProducts);
@@ -17,4 +17,4 @@ router.put("/update/:id", updateProduct);
 router.delete("/delete/:id", deleteProduct);
 router.patch("/toggle-all-prices", toggleAllPrices);
 
-module.exports = router;
+export default router;

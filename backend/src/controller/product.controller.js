@@ -1,6 +1,6 @@
-const Product = require("../models/product.model");
+import Product from "../models/product.model.js";
 
-exports.createProduct = async (req, res) => {
+export const createProduct = async (req, res) => {
   try {
     let { name, category, image, variants, onOrder } = req.body;
 
@@ -46,7 +46,7 @@ exports.createProduct = async (req, res) => {
 /**
  * GET ALL PRODUCTS
  */
-exports.getAllProducts = async (req, res) => {
+export const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find().populate("category");
     res.json(products);
@@ -58,7 +58,7 @@ exports.getAllProducts = async (req, res) => {
 /**
  * GET PRODUCTS BY CATEGORY
  */
-exports.getProductsByCategory = async (req, res) => {
+export const getProductsByCategory = async (req, res) => {
   try {
     const { categoryId } = req.params;
     const products = await Product.find({ category: categoryId }).populate("category");
@@ -72,7 +72,7 @@ exports.getProductsByCategory = async (req, res) => {
 /**
  * UPDATE PRODUCT
  */
-exports.updateProduct = async (req, res) => {
+export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     let { name, category, image, variants, onOrder } = req.body;
@@ -107,7 +107,7 @@ exports.updateProduct = async (req, res) => {
 /**
  * DELETE PRODUCT
  */
-exports.deleteProduct = async (req, res) => {
+export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const product = await Product.findByIdAndDelete(id);
@@ -126,7 +126,7 @@ exports.deleteProduct = async (req, res) => {
 /**
  * TOGGLE PRICE (ALL PRODUCTS)
  */
-exports.toggleAllPrices = async (req, res) => {
+export const toggleAllPrices = async (req, res) => {
   try {
     const products = await Product.find();
     if (!products.length) {

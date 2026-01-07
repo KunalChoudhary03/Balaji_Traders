@@ -1,4 +1,4 @@
-const Category = require("../models/category.model");
+import Category from "../models/category.model.js";
 
 // Create category (accepts direct image URL in body)
 const createCategory = async (req, res) => {
@@ -35,4 +35,4 @@ const getAllCategories = async (req, res) => {
   }
 };
 
-module.exports = { createCategory, getAllCategories };
+export { createCategory, getAllCategories };
