@@ -9,18 +9,20 @@ import CategoryProducts from './CategoryProducts'
 import Cart from './Cart'
 import Dashboard from '../Admin/components/Dashboard.jsx'
 
+
 const Router = () => {
   return (
-     <Routes>
-        <Route path="/" element={<Category />} />
-        <Route path="/category/:categoryId" element={<CategoryProducts />} />
-         <Route path="/chadh" element={<Chadh />}/>
-         <Route path="/cpvc" element={<Cpvc />}/>
-         <Route path="/power" element={<Power />}/>
-         <Route path="/swr" element={<Swr />}/>
-         <Route path="/cart" element={<Cart />}/>
-         <Route path="/admin" element={<Dashboard />}/>
-     </Routes>
+    <Routes>
+  <Route path="/" element={<Category />} />
+  <Route path="/category/:categoryId" element={<CategoryProducts />} />
+  <Route path="/chadh" element={<Chadh />} />
+  <Route path="/cpvc" element={<Cpvc />} />
+  <Route path="/power" element={<Power />} />
+  <Route path="/swr" element={<Swr />} />
+  <Route path="/cart" element={<Cart />} />
+  <Route path="/admin" element={<Dashboard />} />
+</Routes>
+
   ) 
 }
 
