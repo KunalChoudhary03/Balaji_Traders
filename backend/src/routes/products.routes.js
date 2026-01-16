@@ -3,6 +3,7 @@ import {
   createProduct,
   getAllProducts,
   toggleAllPrices,
+  toggleProductPrices,
   getProductsByCategory,
   updateProduct,
   deleteProduct,
@@ -16,5 +17,6 @@ router.get("/category/:categoryId", getProductsByCategory);
 router.put("/update/:id", updateProduct);
 router.delete("/delete/:id", deleteProduct);
 router.patch("/toggle-all-prices", toggleAllPrices);
+router.patch("/toggle-prices/:id", toggleProductPrices);
 
 export default router;

@@ -32,6 +32,9 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   const addToCart = (product) => {
+    const showPrice = product.showPrice === false ? false : true;
+    const price = showPrice ? Number(product.price) || 0 : 0;
+
     setCartItems((prevItems) => {
       const existingItem = prevItems.find(item => item.id === product.id);
       
@@ -43,7 +46,7 @@ export const CartProvider = ({ children }) => {
         );
       }
       
-      return [...prevItems, { ...product, quantity: 1 }];
+      return [...prevItems, { ...product, showPrice, price, quantity: 1 }];
     });
   };
 
@@ -69,7 +72,11 @@ export const CartProvider = ({ children }) => {
   };
 
   const getCartTotal = () => {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return cartItems.reduce((total, item) => {
+      if (item.showPrice === false) return total;
+      const price = Number(item.price) || 0;
+      return total + price * item.quantity;
+    }, 0);
   };
 
   const getCartCount = () => {

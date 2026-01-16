@@ -5,7 +5,6 @@ import { buildCartPdf } from '../utils/pdf';
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, getCartTotal, clearCart } = useCart();
   const [isGenerating, setIsGenerating] = useState(false);
-  const [includePrices, setIncludePrices] = useState(true);
   const [quantityInputs, setQuantityInputs] = useState({});
 
   if (cartItems.length === 0) {
@@ -38,7 +37,7 @@ const Cart = () => {
   const handleDownloadPdf = async () => {
     try {
       setIsGenerating(true);
-      const { blob } = await buildCartPdf(cartItems, { includePrices });
+      const { blob } = await buildCartPdf(cartItems, { includePrices: true });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -80,7 +79,11 @@ const Cart = () => {
 
               <div className="flex-1 min-w-[140px] sm:min-w-0">
                 <h3 className="font-semibold text-sm sm:text-lg leading-tight truncate">{item.name}</h3>
-                <p className="text-green-600 font-semibold text-xs sm:text-base">₹{item.price}</p>
+                {item.showPrice === false ? (
+                  <p className="text-gray-500 font-semibold text-xs sm:text-base">Price hidden</p>
+                ) : (
+                  <p className="text-green-600 font-semibold text-xs sm:text-base">₹{item.price}</p>
+                )}
               </div>
 
               <div className="flex items-center gap-2 sm:gap-3">
@@ -106,7 +109,7 @@ const Cart = () => {
               </div>
 
               <div className="w-full sm:w-auto sm:ml-auto text-right font-semibold text-green-600 text-sm sm:text-base min-w-[70px] sm:min-w-[80px]">
-                ₹{item.price * item.quantity}
+                {item.showPrice === false ? "—" : `₹${item.price * item.quantity}`}
               </div>
 
               <button
@@ -131,24 +134,14 @@ const Cart = () => {
           ))}
 
             <div className="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-gray-200">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-6">
                 <span className="text-lg sm:text-xl font-semibold">Total:</span>
                 <span className="text-xl sm:text-2xl font-bold text-green-600">
                 ₹{getCartTotal()}
               </span>
             </div>
 
-            <label className="flex items-center gap-2 mb-4 text-xs sm:text-sm text-gray-700">
-              <input
-                type="checkbox"
-                checked={includePrices}
-                onChange={(e) => setIncludePrices(e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span>Include prices in PDF</span>
-            </label>
-
-            <div className="flex flex-col sm:flex-row gap-3 mt-2">
+            <div className="flex flex-col sm:flex-row gap-3">
               <button
                 onClick={handleDownloadPdf}
                 disabled={isGenerating}

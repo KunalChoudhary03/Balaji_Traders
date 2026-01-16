@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {
   getCategories,
   getProducts,
-  toggleAllPrices,
+  toggleProductPrices,
   deleteProduct,
 } from "../services/api";
 import { toast } from "react-toastify";
@@ -16,6 +16,7 @@ export default function Dashboard() {
   const [activeForm, setActiveForm] = useState("category");
   const [editingProduct, setEditingProduct] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
   const loadData = async () => {
     try {
@@ -54,11 +55,38 @@ export default function Dashboard() {
     }
   };
 
-  // Filter products based on search
-  const filteredProducts = products.filter((p) =>
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.category?.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleToggleProductPrices = async (productId) => {
+    try {
+      setLoading(true);
+      const { data } = await toggleProductPrices(productId);
+      toast.success(data.showPrice ? "Prices shown" : "Prices hidden");
+      loadData();
+    } catch {
+      toast.error("Toggle failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filter products based on selected category + search
+  const filteredProducts = products.filter((p) => {
+    if (
+      selectedCategoryId &&
+      p.category?._id !== selectedCategoryId &&
+      p.category !== selectedCategoryId
+    ) {
+      return false;
+    }
+
+    const term = searchTerm.toLowerCase();
+    if (!term) return true;
+    return (
+      p.name.toLowerCase().includes(term) ||
+      p.category?.name.toLowerCase().includes(term)
+    );
+  });
+
+  const selectedCategory = categories.find((c) => c._id === selectedCategoryId);
 
   return (
     <div className="min-h-screen bg-gray-100 px-4 py-6">
@@ -125,28 +153,35 @@ export default function Dashboard() {
               <p className="text-gray-500">No categories</p>
             ) : (
               <div className="grid sm:grid-cols-2 gap-4">
-                {categories.map((c) => (
-                  <div
-                    key={c._id}
-                    className="border rounded-lg p-3 flex gap-3"
-                  >
-                    <img
-                      src={c.image}
-                      alt={c.name}
-                      className="w-16 h-16 rounded object-cover"
-                      onError={(e) =>
-                        (e.currentTarget.src =
-                          "https://via.placeholder.com/64")
-                      }
-                    />
-                    <div>
-                      <p className="font-semibold">{c.name}</p>
-                      <p className="text-xs text-gray-500">
-                        {c.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                {categories.map((c) => {
+                  const isSelected = selectedCategoryId === c._id;
+                  return (
+                    <button
+                      type="button"
+                      key={c._id}
+                      onClick={() => setSelectedCategoryId(c._id)}
+                      className={`border rounded-lg p-3 flex gap-3 text-left transition ${
+                        isSelected ? "border-indigo-500 bg-indigo-50" : "hover:border-indigo-200"
+                      }`}
+                    >
+                      <img
+                        src={c.image}
+                        alt={c.name}
+                        className="w-16 h-16 rounded object-cover"
+                        onError={(e) =>
+                          (e.currentTarget.src =
+                            "https://via.placeholder.com/64")
+                        }
+                      />
+                      <div>
+                        <p className="font-semibold">{c.name}</p>
+                        <p className="text-xs text-gray-500">
+                          {c.description}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -155,98 +190,103 @@ export default function Dashboard() {
           <div className="bg-white rounded-xl shadow p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">
-                Products ({filteredProducts.length})
+                {selectedCategory
+                  ? `${selectedCategory.name} Products (${filteredProducts.length})`
+                  : "Select a category to view products"}
               </h2>
-
-              <button
-                onClick={async () => {
-                  try {
-                    setLoading(true);
-                    await toggleAllPrices();
-                    toast.success("Prices toggled");
-                    loadData();
-                  } catch {
-                    toast.error("Toggle failed");
-                  } finally {
-                    setLoading(false);
-                  }
-                }}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm"
-              >
-                Toggle Prices
-              </button>
             </div>
 
-            {/* Search Bar */}
-            <div className="mb-4">
-              <input
-                type="text"
-                placeholder=" Search products by name or category..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-              />
-            </div>
-
-            {filteredProducts.length === 0 ? (
-              <p className="text-gray-500 text-center py-4">
-                {searchTerm ? "No products found" : "No products"}
+            {!selectedCategory ? (
+              <p className="text-gray-500 text-center py-6">
+                Choose a category on the left to see its products.
               </p>
             ) : (
-              <div className="space-y-3 max-h-[500px] overflow-y-auto">
-                {filteredProducts.map((p) => (
-                  <div
-                    key={p._id}
-                    className="border rounded-lg p-3 flex gap-3"
-                  >
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      className="w-20 h-20 rounded object-cover"
-                      onError={(e) =>
-                        (e.currentTarget.src =
-                          "https://via.placeholder.com/80")
-                      }
-                    />
+              <>
+                {/* Search Bar */}
+                <div className="mb-4">
+                  <input
+                    type="text"
+                    placeholder=" Search products by name or category..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                  />
+                </div>
 
-                    <div className="flex-1">
-                      <p className="font-semibold">{p.name}</p>
-                      <p className="text-xs text-gray-500 mb-2">
-                        {p.category?.name}
-                      </p>
+                {filteredProducts.length === 0 ? (
+                  <p className="text-gray-500 text-center py-4">
+                    {searchTerm ? "No products found" : "No products"}
+                  </p>
+                ) : (
+                  <div className="space-y-3 max-h-[500px] overflow-y-auto">
+                    {filteredProducts.map((p) => (
+                      <div
+                        key={p._id}
+                        className="border rounded-lg p-3 flex gap-3"
+                      >
+                        <img
+                          src={p.image}
+                          alt={p.name}
+                          className="w-20 h-20 rounded object-cover"
+                          onError={(e) =>
+                            (e.currentTarget.src =
+                              "https://via.placeholder.com/80")
+                          }
+                        />
 
-                      <div className="flex gap-2 flex-wrap">
-                        {p.variants?.slice(0, 2).map((v, i) => (
-                          <span
-                            key={i}
-                            className="text-xs bg-gray-100 px-2 py-1 rounded"
+                        <div className="flex-1">
+                          <p className="font-semibold">{p.name}</p>
+                          <p className="text-xs text-gray-500 mb-2">
+                            {p.category?.name}
+                          </p>
+
+                          <div className="flex gap-2 flex-wrap">
+                            {p.variants?.slice(0, 2).map((v, i) => (
+                              <span
+                                key={i}
+                                className="text-xs bg-gray-100 px-2 py-1 rounded"
+                              >
+                                {v.size}: ₹{v.price}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                          <button
+                            onClick={() => handleToggleProductPrices(p._id)}
+                            className={`px-3 py-1 rounded text-xs border ${
+                              p.variants?.[0]?.showPrice === false
+                                ? "bg-gray-100 text-gray-700"
+                                : "bg-green-50 text-green-700"
+                            }`}
                           >
-                            {v.size}: ₹{v.price}
-                          </span>
-                        ))}
+                            {p.variants?.[0]?.showPrice === false
+                              ? "Show Prices"
+                              : "Hide Prices"}
+                          </button>
+
+                          <button
+                            onClick={() => handleEditProduct(p)}
+                            className="px-3 py-1 bg-blue-50 text-blue-600 rounded text-xs"
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              handleDeleteProduct(p._id, p.name)
+                            }
+                            className="px-3 py-1 bg-red-50 text-red-600 rounded text-xs"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                      <button
-                        onClick={() => handleEditProduct(p)}
-                        className="px-3 py-1 bg-blue-50 text-blue-600 rounded text-xs"
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        onClick={() =>
-                          handleDeleteProduct(p._id, p.name)
-                        }
-                        className="px-3 py-1 bg-red-50 text-red-600 rounded text-xs"
-                      >
-                        Delete
-                      </button>
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                )}
+              </>
             )}
           </div>
         </div>

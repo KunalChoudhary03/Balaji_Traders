@@ -15,6 +15,7 @@ const CategoryProducts = () => {
   const [selectedVariants, setSelectedVariants] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [quantityInputs, setQuantityInputs] = useState({});
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -56,6 +57,7 @@ const CategoryProducts = () => {
       id: `${product._id}-${variant.size}`,
       name: `${product.name} (${variant.size})`,
       price: variant.price,
+      showPrice: variant.showPrice !== false,
       image: product.image,
       quantity: 1,
     });
@@ -75,6 +77,48 @@ const CategoryProducts = () => {
       const newQuantity = cartItem.quantity + change;
       updateQuantity(cartId, newQuantity);
     }
+  };
+
+  const handleQuantityInput = (product, value) => {
+    const variant = getVariant(product);
+    const cartId = `${product._id}-${variant.size}`;
+    
+    // Store the input value to allow editing
+    setQuantityInputs({ ...quantityInputs, [cartId]: value });
+  };
+
+  const handleQuantityBlur = (product) => {
+    const variant = getVariant(product);
+    const cartId = `${product._id}-${variant.size}`;
+    const qty = parseInt(quantityInputs[cartId]) || 0;
+
+    if (qty > 0) {
+      updateQuantity(cartId, qty);
+    } else {
+      // Reset to current cart item quantity if invalid
+      setQuantityInputs({ ...quantityInputs, [cartId]: undefined });
+    }
+  };
+
+  const handleAddToCartWithQuantity = (product, quantity) => {
+    const variant = getVariant(product);
+    const cartId = `${product._id}-${variant.size}`;
+
+    for (let i = 0; i < quantity; i++) {
+      addToCart({
+        id: cartId,
+        name: `${product.name} (${variant.size})`,
+        price: variant.price,
+        showPrice: variant.showPrice !== false,
+        image: product.image,
+        quantity: 1,
+      });
+    }
+
+    toast.success(`${product.name} added to cart!`, {
+      position: "top-right",
+      autoClose: 2000,
+    });
   };
 
   const filteredProducts = products.filter((product) =>
@@ -155,10 +199,17 @@ const CategoryProducts = () => {
                   key={product._id}
                   className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full relative"
                 >
-                  {/* On Order Badge */}
-                  {product.onOrder && (
-                    <div className="absolute top-2 left-2 bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-md shadow-md z-10">
-                      On Order
+                  {/* Status Badge */}
+                  {product.productStatus && product.productStatus !== 'normal' && (
+                    <div className={`absolute top-2 left-2 text-white text-xs font-bold px-2 py-1 rounded-md shadow-md z-10 ${
+                      product.productStatus === 'on-order' ? 'bg-amber-500' :
+                      product.productStatus === 'top-seller' ? 'bg-green-500' :
+                      product.productStatus === 'dispatch' ? 'bg-blue-500' :
+                      'bg-gray-500'
+                    }`}>
+                      {product.productStatus === 'on-order' && 'On Order'}
+                      {product.productStatus === 'top-seller' && 'Top Seller'}
+                      {product.productStatus === 'dispatch' && 'Dispatch'}
                     </div>
                   )}
                   
@@ -185,9 +236,13 @@ const CategoryProducts = () => {
                       )}
                     </div>
 
-                    {/* Variant Selection - Single Column */}
+                    {/* Variant Selection - Grid or Column */}
                     {product.variants && product.variants.length > 0 && (
-                      <div className="mb-2 sm:mb-4 flex flex-col gap-1 sm:gap-2">
+                      <div className={`mb-2 sm:mb-4 gap-1 sm:gap-2 ${
+                        product.variants.length >= 4
+                          ? 'grid grid-cols-2'
+                          : 'flex flex-col'
+                      }`}>
                         {product.variants.map((v, idx) => (
                           <label
                             key={idx}
@@ -219,18 +274,23 @@ const CategoryProducts = () => {
                     )}
 
                     {/* Add to Cart or Quantity Controls - Pushed to Bottom */}
-                    <div className="mt-auto pt-2 sm:pt-4">
+                    <div className="mt-auto pt-2 sm:pt-4 space-y-2">
                       {cartItem ? (
-                        <div className="flex items-center justify-between bg-blue-50 rounded-lg p-2 sm:p-3">
+                        <div className="flex items-center justify-between bg-blue-50 rounded-lg p-2 sm:p-3 gap-1 sm:gap-2">
                           <button
                             onClick={() => handleQuantityChange(product, -1)}
                             className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition font-bold text-sm sm:text-lg"
                           >
                             -
                           </button>
-                          <span className="font-bold text-gray-800 text-sm sm:text-lg">
-                            {cartItem.quantity}
-                          </span>
+                          <input
+                            type="number"
+                            min="1"
+                            value={quantityInputs[cartId] !== undefined ? quantityInputs[cartId] : cartItem.quantity}
+                            onChange={(e) => handleQuantityInput(product, e.target.value)}
+                            onBlur={() => handleQuantityBlur(product)}
+                            className="w-12 sm:w-16 text-center border border-gray-300 rounded px-1 py-1 text-xs sm:text-sm"
+                          />
                           <button
                             onClick={() => handleQuantityChange(product, 1)}
                             className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition font-bold text-sm sm:text-lg"

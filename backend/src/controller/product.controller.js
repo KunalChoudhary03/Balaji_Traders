@@ -2,7 +2,7 @@ import Product from "../models/product.model.js";
 
 export const createProduct = async (req, res) => {
   try {
-    let { name, category, image, variants, onOrder } = req.body;
+    let { name, category, image, variants, productStatus } = req.body;
 
     if (!name || !category || !image || !variants) {
       return res.status(400).json({ message: "All fields required" });
@@ -33,7 +33,7 @@ export const createProduct = async (req, res) => {
       category,
       image,
       variants: cleanVariants,
-      onOrder: onOrder || false,
+      productStatus: productStatus || 'normal',
     });
 
     res.status(201).json(product);
@@ -75,7 +75,7 @@ export const getProductsByCategory = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    let { name, category, image, variants, onOrder } = req.body;
+    let { name, category, image, variants, productStatus } = req.body;
 
     if (typeof variants === "string") {
       variants = JSON.parse(variants);
@@ -89,7 +89,7 @@ export const updateProduct = async (req, res) => {
 
     const product = await Product.findByIdAndUpdate(
       id,
-      { name, category, image, variants: cleanVariants, onOrder: onOrder || false },
+      { name, category, image, variants: cleanVariants, productStatus: productStatus || 'normal' },
       { new: true, runValidators: true }
     ).populate("category");
 
@@ -148,6 +148,43 @@ export const toggleAllPrices = async (req, res) => {
     res.json({
       success: true,
       showPrice: newState,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/**
+ * TOGGLE PRICE (SINGLE PRODUCT)
+ */
+export const toggleProductPrices = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    const firstVariant = product.variants.find(v => v);
+    if (!firstVariant) {
+      return res.status(400).json({ message: "No variants found" });
+    }
+
+    const newState = !firstVariant.showPrice;
+
+    await Product.updateOne(
+      { _id: id },
+      { $set: { "variants.$[].showPrice": newState } }
+    );
+
+    const updatedProduct = await Product.findById(id).populate("category");
+
+    return res.json({
+      success: true,
+      showPrice: newState,
+      product: updatedProduct,
     });
   } catch (err) {
     console.error(err);

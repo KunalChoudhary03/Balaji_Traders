@@ -75,7 +75,9 @@ export const buildCartPdf = async (
       y = 20;
     }
 
-    const amount = item.price * item.quantity;
+    const showPrice = item.showPrice !== false;
+    const priceValue = showPrice ? Number(item.price) || 0 : 0;
+    const amount = showPrice ? priceValue * item.quantity : 0;
     totalQty += item.quantity;
     totalAmount += amount;
 
@@ -85,12 +87,18 @@ export const buildCartPdf = async (
     });
 
     if (includePrices) {
-      doc.text(formatCurrency(item.price), pageWidth - 50, y, {
-        align: "right",
-      });
-      doc.text(formatCurrency(amount), pageWidth - 14, y, {
-        align: "right",
-      });
+      doc.text(
+        showPrice ? formatCurrency(priceValue) : "N/A",
+        pageWidth - 50,
+        y,
+        { align: "right" }
+      );
+      doc.text(
+        showPrice ? formatCurrency(amount) : "N/A",
+        pageWidth - 14,
+        y,
+        { align: "right" }
+      );
     }
 
     y += 6;
@@ -131,14 +139,13 @@ export const buildCartPdf = async (
   const blob = doc.output("blob");
 
   const summaryText = cartItems
-    .map(
-      (item) =>
-        `${item.name} x${item.quantity}${
-          includePrices
-            ? ` = ${formatCurrency(item.price * item.quantity)}`
-            : ""
-        }`
-    )
+    .map((item) => {
+      const showPrice = item.showPrice !== false;
+      const amount = showPrice ? (Number(item.price) || 0) * item.quantity : 0;
+      return `${item.name} x${item.quantity}${
+        includePrices && showPrice ? ` = ${formatCurrency(amount)}` : ""
+      }`;
+    })
     .join("\n");
 
   return { blob, summaryText };

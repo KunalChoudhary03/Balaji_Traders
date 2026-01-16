@@ -2,30 +2,62 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="https://i.pinimg.com/736x/1a/41/fe/1a41fe9370d5afa80dd8be7f644244f7.jpg" />
+
+    <!-- SEO TITLE -->
+    <title>Balaji Traders Bidwal | Plumbing & Hardware Store</title>
+
+    <!-- META DESCRIPTION (VERY IMPORTANT) -->
+    <meta
+      name="description"
+      content="Balaji Traders is a trusted plumbing and hardware store offering pipes, fittings, valves, and construction materials at best prices."
+    />
+
+    <!-- KEYWORDS (optional but useful) -->
+    <meta
+      name="keywords"
+      content="Balaji Traders, plumbing store, hardware shop, pipes, fittings, valves, construction material"
+    />
+
+    <!-- MOBILE -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Balaji Traders</title>
+
+    <!-- CANONICAL URL (CRITICAL FOR INDEXING) -->
+    <link rel="canonical" href="https://balaji-traders-alpha.vercel.app/" />
+
+    <!-- FAVICON -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://i.pinimg.com/736x/1a/41/fe/1a41fe9370d5afa80dd8be7f644244f7.jpg"
+    />
+
+    <!-- THEME COLOR (PWA + MOBILE) -->
+    <meta name="theme-color" content="#ff0000" />
   </head>
+
   <body>
     <div id="root"></div>
+
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Vercel SPA Fix -->
     <script type="text/javascript">
-    (function (l) {
-      if (l.search[1] === "/") {
-        var decoded = l.search
-          .slice(1)
-          .split("&")
-          .map(function (s) {
-            return s.replace(/~and~/g, "&");
-          })
-          .join("?");
-        window.history.replaceState(
-          null,
-          null,
-          l.pathname.slice(0, -1) + decoded + l.hash
-        );
-      }
-    })(window.location);
-  </script>
+      (function (l) {
+        if (l.search[1] === "/") {
+          var decoded = l.search
+            .slice(1)
+            .split("&")
+            .map(function (s) {
+              return s.replace(/~and~/g, "&");
+            })
+            .join("?");
+          window.history.replaceState(
+            null,
+            null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      })(window.location);
+    </script>
   </body>
 </html>

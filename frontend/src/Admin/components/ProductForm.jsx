@@ -11,26 +11,29 @@ export default function ProductForm({
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState("");
-  const [onOrder, setOnOrder] = useState(false);
-  const [variants, setVariants] = useState([{ size: "", price: "" }]);
+  const [productStatus, setProductStatus] = useState("normal");
+  const [variants, setVariants] = useState([
+    { size: "", price: "", showPrice: true },
+  ]);
 
   useEffect(() => {
     if (editingProduct) {
       setName(editingProduct.name);
       setCategory(editingProduct.category?._id || editingProduct.category);
       setImage(editingProduct.image);
-      setOnOrder(editingProduct.onOrder || false);
+      setProductStatus(editingProduct.productStatus || 'normal');
       setVariants(
         editingProduct.variants.map((v) => ({
           size: v.size,
           price: v.price,
+          showPrice: v.showPrice !== false,
         }))
       );
     }
   }, [editingProduct]);
 
   const addVariant = () =>
-    setVariants([...variants, { size: "", price: "" }]);
+    setVariants([...variants, { size: "", price: "", showPrice: true }]);
 
   const removeVariant = (index) =>
     setVariants(variants.filter((_, i) => i !== index));
@@ -45,8 +48,8 @@ export default function ProductForm({
     setName("");
     setCategory("");
     setImage("");
-    setOnOrder(false);
-    setVariants([{ size: "", price: "" }]);
+    setProductStatus("normal");
+    setVariants([{ size: "", price: "", showPrice: true }]);
     onCancelEdit?.();
   };
 
@@ -69,11 +72,11 @@ export default function ProductForm({
         name,
         category,
         image,
-        onOrder,
+        productStatus,
         variants: cleanVariants.map((v) => ({
           size: v.size,
           price: Number(v.price),
-          showPrice: true,
+          showPrice: v.showPrice !== false,
         })),
       };
 
@@ -150,19 +153,16 @@ export default function ProductForm({
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setOnOrder(!onOrder)}
-          className={`relative w-14 h-8 rounded-full transition ${
-            onOrder ? "bg-green-600" : "bg-gray-300"
-          }`}
-        >
-          <span
-            className={`absolute top-1 h-6 w-6 bg-white rounded-full transition ${
-              onOrder ? "left-7" : "left-1"
-            }`}
-          />
-        </button>
+        <select
+        className="w-full border rounded-lg px-4 py-3 text-sm bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
+        value={productStatus}
+        onChange={(e) => setProductStatus(e.target.value)}
+      >
+        <option value="normal">Normal</option>
+        <option value="on-order">On Order</option>
+        <option value="top-seller">Top Seller</option>
+        <option value="dispatch">Dispatch</option>
+      </select>
       </div>
 
       {/* Variants */}
