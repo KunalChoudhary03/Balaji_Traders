@@ -57,14 +57,16 @@ export default function Dashboard() {
 
   const handleToggleProductPrices = async (productId) => {
     try {
-      setLoading(true);
       const { data } = await toggleProductPrices(productId);
+      
+      // Update only the specific product in the state
+      setProducts(products.map(p => 
+        p._id === productId ? data.product : p
+      ));
+      
       toast.success(data.showPrice ? "Prices shown" : "Prices hidden");
-      loadData();
     } catch {
       toast.error("Toggle failed");
-    } finally {
-      setLoading(false);
     }
   };
 
