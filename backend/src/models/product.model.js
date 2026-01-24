@@ -14,7 +14,7 @@ const productSchema = new mongoose.Schema(
       ref: "Category",
       required: true,
     },
-    image: { type: String, required: true }, // 👈 Image URL only
+    image: { type: String, required: true },
     variants: [variantSchema],
     productStatus: { type: String, enum: ['normal', 'on-order', 'top-seller', 'dispatch'], default: 'normal' },
   },

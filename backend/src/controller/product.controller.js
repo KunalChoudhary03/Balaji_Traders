@@ -44,18 +44,6 @@ export const createProduct = async (req, res) => {
 };
 
 /**
- * GET ALL PRODUCTS
- */
-export const getAllProducts = async (req, res) => {
-  try {
-    const products = await Product.find().populate("category");
-    res.json(products);
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-/**
  * GET PRODUCTS BY CATEGORY
  */
 export const getProductsByCategory = async (req, res) => {

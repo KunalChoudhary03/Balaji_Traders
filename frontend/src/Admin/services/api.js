@@ -8,8 +8,8 @@ const API = axios.create({ baseURL: API_BASE_URL });
 export const getCategories = () => API.get("/category/all");
 export const createCategory = (data) => API.post("/category/create", data);
 
-// Products
-export const getProducts = () => API.get("/product/all");
+// Products - Use getProductsByCategory endpoint
+export const getProducts = () => API.get("/product/category/all");
 export const createProduct = (data) => API.post("/product/create", data);
 export const updateProduct = (id, data) => API.put(`/product/update/${id}`, data);
 export const deleteProduct = (id) => API.delete(`/product/delete/${id}`);
