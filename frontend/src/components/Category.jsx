@@ -39,8 +39,10 @@ const Category = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 display-flex flex-col px-4">
         Loading categories...
+
+        <p className="text-center text-red-500 mt-2">We are currently using free server , this might take some time due to limited resources.</p>
       </div>
     );
   }
