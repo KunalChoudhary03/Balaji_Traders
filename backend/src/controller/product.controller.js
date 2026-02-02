@@ -1,5 +1,18 @@
 import Product from "../models/product.model.js";
 
+/**
+ * GET ALL PRODUCTS (ADMIN)
+ */
+export const getAllProducts = async (req, res) => {
+  try {
+    const products = await Product.find().populate("category");
+    res.json(products);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 export const createProduct = async (req, res) => {
   try {
     let { name, category, image, variants, productStatus } = req.body;
